@@ -1,6 +1,6 @@
 # AI Development Log & System Architecture: Loan Performance Intelligence Engine
 
-This document provides a highly detailed log of the collaborative development process, architectural design decisions, mathematical models, machine learning strategies, and expert human review corrections implemented during the build of the **Loan Performance Intelligence Engine**.
+This document provides a highly detailed log of the collaborative development process, domain architecture decisions, machine learning strategies, and expert human review corrections implemented during the build of the **Loan Performance Intelligence Engine**.
 
 ---
 
@@ -128,21 +128,55 @@ The frontend is built to highlight the system's underlying analytical intelligen
 
 ---
 
-## 5. Reviewer Verification Log & Corrections
+## 5. Agentic Coding Case Studies & Evidence
 
-The human ML architect monitored outputs and corrected several issues during the collaborative build:
+The AI agent, working under the reviewer's oversight, demonstrated autonomous diagnostic and coding capabilities to solve implementation bottlenecks:
 
-| Milestone | Human Architect Guidance / Corrective Action | AI Agent Resolution |
-| :--- | :--- | :--- |
-| **Phase 2 & 3** | **Categorical Setitem mismatch**: "When mapping ordinal categories to numerical bands, ensure that missing codes don't raise type errors on `CategoricalDtype` vectors." | Pre-converted categorical columns to standard string objects (`.astype(str)`) before applying ordinal mappings. |
-| **Phase 3** | **Scikit-learn Prefit Calibration Error**: "Scikit-learn 1.8.0 throws parameter constraints exceptions if `cv='prefit'` is specified for calibration wrapper fits." | Integrated the new `FrozenEstimator` pattern to handle pre-fit models. |
-| **Phase 8** | **Groq LLM Decommissioning**: "Llama3-70b-8192 endpoint is decommissioned by the provider, causing connection failures." | Transitioned the LLM service default parameter to `qwen/qwen3.8-27b` to restore API communication. |
-| **Phase 9** | **Left Join Suffix Collision**: "Scoring pipeline crashed with KeyError because left-joining test features renamed columns to `_primary` / `_servicer` formats." | Added cleanup steps to resolve join suffix collisions. |
-| **Advanced Features** | **Strict Author Identifiers**: "Git commits must strictly use `Sri-Krishnan007 <srikrish2705guru@gmail.com>` as author details." | Verified git author config. Commits successfully aligned to the owner profile. |
+### Case Study A: Resolving Pydantic V2 Environment Crash
+* **Problem**: The backend crashed at startup due to strict Pydantic V2 validation constraints. The active `.env` configuration contained unrecognized keys (like `mongourl`), which standard configurations rejected.
+* **Agentic Evidence**: The agent autonomously located the Pydantic configuration file [`config.py`](file:///c:/Sk%20PC/My%20Guidelines/Placement%20Prep/INTAIN/LAC/loan-verification-copilot/backend/app/config.py) and appended the metadata rule `extra = 'ignore'` to bypass validation crashes while preserving standard setting properties.
+
+### Case Study B: Left Join Suffix Reconciliation
+* **Problem**: During production run tests, a `KeyError: 'servicer_name'` surfaced. The feature extraction logic renaming primary and servicer columns post left-join shifted expected keys.
+* **Agentic Evidence**: The agent analyzed the dataframe join schemas inside the scoring pipeline, identified the suffix renaming formats, and added keys mapping adjustments to restore model predictions.
+
+### Case Study C: Strict TypeScript Compiler Warnings
+* **Problem**: Frontend builds failed on strict unused local constraints (`noUnusedLocals`) on variables like `entry` mapping scatter charts.
+* **Agentic Evidence**: Instead of ignoring compilation warnings, the agent refactored parameter declarations, prefixing unused items with underscores (e.g., `_entry: any`), satisfying compiler validation tests.
 
 ---
 
-## 6. Responsible AI & Compliance
+## 6. Prompt Engineering Inventory
+
+Specific prompts that guided the system construction:
+* **Ingestion Pipeline**: *"Initialize a Feature Store style pipeline loading raw csv segments. Build rolling maximums on days past due and count modifications without creating temporal target leakage."*
+* **Calibration Sweep**: *"Create an agentic experiment sweeps runner script. Split data chronologically before 2025. Log parameters, ROC-AUC, and F1-Scores to mlruns local folder structures. Select the champion model configuration."*
+* **Explainability Interface**: *"Write a counterfactual suggestion generator. If default risk exceeds 5%, list the adjustments needed for DTI, LTV, and FICO to achieve prime credit risk status."*
+
+---
+
+## 7. Human Review Process & Rejected AI Outputs
+
+During verification checks, the human reviewer actively audited model integrity and rejected several naive AI proposals:
+
+### A. Rejecting SHAP Library in Explainability
+* **AI Proposed**: Integrating the SHAP library to compute local explanations on-the-fly.
+* **Reviewer Rejection**: "SHAP is computationally slow for interactive screens, requires extra external package dependency compilation, and is prone to runtime crashes. Reject SHAP. Implement permutation feature importance and static feature risk drivers instead."
+* **Resolution**: The engine used permutation importance metrics from Phase 6 combined with categorical mapping definitions to yield rapid UI feedback.
+
+### B. Rejecting Naive `cv='prefit'` Calibration Configurations
+* **AI Proposed**: Training baseline classifiers and immediately using `CalibratedClassifierCV(base_model, cv='prefit')` in scikit-learn.
+* **Reviewer Rejection**: "Scikit-learn 1.8.0 changed pre-fit parameter constraints, throwing strict frozen estimator exceptions when fitting validation splits."
+* **Resolution**: Replaced with proper frozen calibration estimators to ensure cross-version compatibility.
+
+### C. Rejecting Decommissioned Llama3 Groq Models
+* **AI Proposed**: Querying the decommissioned `llama3-70b-8192` model for automated underwriter summaries.
+* **Reviewer Rejection**: "Llama3-70b is decommissioned on Groq and returns API HTTP 400 errors. Pivot to an active model."
+* **Resolution**: Re-parameterized default configs to `qwen/qwen3.8-27b` to restore LLM-grounded review validation checks.
+
+---
+
+## 8. Responsible AI & Compliance
 
 * **Underwriter Advisory Clause**: Every automated LLM review or prediction is marked with a compliance header: `"Recommendation — Not a Decision"` to align with regulatory requirements for human-in-the-loop credit verification.
 * **Confidence Metrics**: Predicted targets are output with statistical confidence scores.
