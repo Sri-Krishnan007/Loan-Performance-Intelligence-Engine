@@ -250,3 +250,24 @@ The solution contains a **React + TypeScript + Vite** frontend and a **FastAPI P
     ```bash
     npm run dev:frontend
     ```
+
+### Running Python Pipeline & Generation Scripts
+
+All data-generation and ML phase scripts are organized under the `scripts/` directory. You can run them from the project root folder:
+
+* **To regenerate the synthetic datasets**:
+  ```bash
+  python scripts/01_create_static_attributes.py
+  python scripts/02_create_monthly_performance_train.py
+  python scripts/03_create_monthly_performance_test.py
+  python scripts/04_create_servicer_updates.py
+  ```
+
+* **To run the ML/AI pipeline phases (Phase 1 to 9)**:
+  ```bash
+  python scripts/run_phase1.py
+  python scripts/run_phase2.py
+  # ... and so on up to phase 9:
+  python scripts/run_phase9.py
+  ```
+
