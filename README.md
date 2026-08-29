@@ -135,3 +135,8 @@ python scripts/feature_stress_sensitivity.py
 # Run Agentic Hyperparameter Sweeping & Local MLflow logging
 python scripts/agentic_experiment_runner.py
 ```
+
+---
+
+*Maintained by Sri-Krishnan007.*
+
