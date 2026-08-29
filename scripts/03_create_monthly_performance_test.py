@@ -1,3 +1,6 @@
+import sys
+from pathlib import Path
+sys.path.append(str(Path(__file__).resolve().parent.parent))
 """
 Intain Loan Performance Intelligence Engine
 Synthetic Data Generator - Monthly Test Dataset
@@ -28,11 +31,9 @@ from tqdm import tqdm
 SEED = 123
 END_DATE = pd.Timestamp("2026-07-01")
 
-INPUT_FILE = Path(
-    "data/synthetic/loan_static_attributes.csv"
-)
+INPUT_FILE = Path(__file__).resolve().parent.parent / "data/synthetic/loan_static_attributes.csv"
 
-OUTPUT_DIR = Path("data/synthetic")
+OUTPUT_DIR = Path(__file__).resolve().parent.parent / "data/synthetic"
 
 OUTPUT_FILE = (
     OUTPUT_DIR /

@@ -1,3 +1,6 @@
+import sys
+from pathlib import Path
+sys.path.append(str(Path(__file__).resolve().parent.parent))
 """
 Intain Loan Performance Intelligence Engine
 Synthetic Data Generator - Servicer Updates
@@ -32,9 +35,7 @@ from tqdm import tqdm
 
 SEED = 2026
 
-INPUT_FILE = Path(
-    "data/synthetic/loan_monthly_performance_train.csv"
-)
+INPUT_FILE = Path(__file__).resolve().parent.parent / "data/synthetic/loan_monthly_performance_train.csv"
 
 OUTPUT_DIR = Path(
     "data/synthetic"

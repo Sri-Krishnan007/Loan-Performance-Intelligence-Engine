@@ -1,3 +1,6 @@
+import sys
+from pathlib import Path
+sys.path.append(str(Path(__file__).resolve().parent.parent))
 """
 Intain Loan Performance Intelligence Engine
 Synthetic Data Generator - Static Loan Attributes
@@ -27,7 +30,7 @@ from tqdm import tqdm
 SEED = 42
 N_LOANS = 2_000
 
-OUTPUT_DIR = Path("data/synthetic")
+OUTPUT_DIR = Path(__file__).resolve().parent.parent / "data/synthetic"
 OUTPUT_FILE = OUTPUT_DIR / "loan_static_attributes.csv"
 
 rng = np.random.default_rng(SEED)
