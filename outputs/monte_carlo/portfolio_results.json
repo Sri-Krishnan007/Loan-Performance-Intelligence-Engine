@@ -1,0 +1,18 @@
+{
+  "portfolio_initial_balance": 411051634.15,
+  "num_trials": 1000,
+  "projection_months": 12,
+  "loss_severity": 0.45,
+  "metrics": {
+    "mean_loss_rate": 0.137481086319196,
+    "std_loss_rate": 0.004213259017080625,
+    "value_at_risk_95": 0.14407794132171195,
+    "value_at_risk_99": 0.14819533089207806,
+    "mean_prepayment_rate": 0.013244834698903777,
+    "mean_interest_yield_rate": 0.037000004059377305,
+    "expected_losses": 56511825.19622272,
+    "value_at_risk_95_amount": 59223473.2252575,
+    "value_at_risk_99_amount": 60915932.93658866,
+    "expected_interest_earnings": 15208912.132163674
+  }
+}

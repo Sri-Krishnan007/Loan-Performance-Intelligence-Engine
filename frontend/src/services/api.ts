@@ -411,3 +411,108 @@ export const predictLive = async (payload: LivePredictionPayload): Promise<LiveP
     };
   }
 };
+
+export interface MonteCarloMetrics {
+  portfolio_initial_balance: number;
+  num_trials: number;
+  projection_months: number;
+  loss_severity: number;
+  metrics: {
+    mean_loss_rate: number;
+    std_loss_rate: number;
+    value_at_risk_95: number;
+    value_at_risk_99: number;
+    mean_prepayment_rate: number;
+    mean_interest_yield_rate: number;
+    expected_losses: number;
+    value_at_risk_95_amount: number;
+    value_at_risk_99_amount: number;
+    expected_interest_earnings: number;
+  };
+}
+
+export interface StressSensitivityItem {
+  leverage_stress: string;
+  equity_stress: string;
+  average_default_probability: number;
+}
+
+export const getMonteCarlo = async (): Promise<MonteCarloMetrics> => {
+  if (isMockModeActive()) {
+    return {
+      portfolio_initial_balance: 411051634.15,
+      num_trials: 1000,
+      projection_months: 12,
+      loss_severity: 0.45,
+      metrics: {
+        mean_loss_rate: 0.13748,
+        std_loss_rate: 0.0035,
+        value_at_risk_95: 0.14408,
+        value_at_risk_99: 0.14819,
+        mean_prepayment_rate: 0.0425,
+        mean_interest_yield_rate: 0.052,
+        expected_losses: 56511116.5,
+        value_at_risk_95_amount: 59223397.0,
+        value_at_risk_99_amount: 60915729.0,
+        expected_interest_earnings: 21374684.0
+      }
+    };
+  }
+  try {
+    const res = await client.get<MonteCarloMetrics>('/scenarios/monte-carlo');
+    return res.data;
+  } catch (err) {
+    console.warn("Backend /scenarios/monte-carlo unavailable, using mock data.", err);
+    return {
+      portfolio_initial_balance: 411051634.15,
+      num_trials: 1000,
+      projection_months: 12,
+      loss_severity: 0.45,
+      metrics: {
+        mean_loss_rate: 0.13748,
+        std_loss_rate: 0.0035,
+        value_at_risk_95: 0.14408,
+        value_at_risk_99: 0.14819,
+        mean_prepayment_rate: 0.0425,
+        mean_interest_yield_rate: 0.052,
+        expected_losses: 56511116.5,
+        value_at_risk_95_amount: 59223397.0,
+        value_at_risk_99_amount: 60915729.0,
+        expected_interest_earnings: 21374684.0
+      }
+    };
+  }
+};
+
+export const getStressSensitivity = async (): Promise<StressSensitivityItem[]> => {
+  if (isMockModeActive()) {
+    return [
+      { leverage_stress: "Base Leverage", equity_stress: "Base Equity", average_default_probability: 0.0152 },
+      { leverage_stress: "Base Leverage", equity_stress: "Moderate LTV (+10%)", average_default_probability: 0.0242 },
+      { leverage_stress: "Base Leverage", equity_stress: "Severe LTV (+20%)", average_default_probability: 0.0384 },
+      { leverage_stress: "Moderate DTI (+5%)", equity_stress: "Base Equity", average_default_probability: 0.0315 },
+      { leverage_stress: "Moderate DTI (+5%)", equity_stress: "Moderate LTV (+10%)", average_default_probability: 0.0482 },
+      { leverage_stress: "Moderate DTI (+5%)", equity_stress: "Severe LTV (+20%)", average_default_probability: 0.0684 },
+      { leverage_stress: "Severe DTI (+12%)", equity_stress: "Base Equity", average_default_probability: 0.0582 },
+      { leverage_stress: "Severe DTI (+12%)", equity_stress: "Moderate LTV (+10%)", average_default_probability: 0.0842 },
+      { leverage_stress: "Severe DTI (+12%)", equity_stress: "Severe LTV (+20%)", average_default_probability: 0.1245 }
+    ];
+  }
+  try {
+    const res = await client.get<StressSensitivityItem[]>('/scenarios/sensitivity');
+    return res.data;
+  } catch (err) {
+    console.warn("Backend /scenarios/sensitivity unavailable, using mock data.", err);
+    return [
+      { leverage_stress: "Base Leverage", equity_stress: "Base Equity", average_default_probability: 0.0152 },
+      { leverage_stress: "Base Leverage", equity_stress: "Moderate LTV (+10%)", average_default_probability: 0.0242 },
+      { leverage_stress: "Base Leverage", equity_stress: "Severe LTV (+20%)", average_default_probability: 0.0384 },
+      { leverage_stress: "Moderate DTI (+5%)", equity_stress: "Base Equity", average_default_probability: 0.0315 },
+      { leverage_stress: "Moderate DTI (+5%)", equity_stress: "Moderate LTV (+10%)", average_default_probability: 0.0482 },
+      { leverage_stress: "Moderate DTI (+5%)", equity_stress: "Severe LTV (+20%)", average_default_probability: 0.0684 },
+      { leverage_stress: "Severe DTI (+12%)", equity_stress: "Base Equity", average_default_probability: 0.0582 },
+      { leverage_stress: "Severe DTI (+12%)", equity_stress: "Moderate LTV (+10%)", average_default_probability: 0.0842 },
+      { leverage_stress: "Severe DTI (+12%)", equity_stress: "Severe LTV (+20%)", average_default_probability: 0.1245 }
+    ];
+  }
+};

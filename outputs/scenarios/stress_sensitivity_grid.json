@@ -1,0 +1,47 @@
+[
+  {
+    "leverage_stress": "Base Leverage",
+    "equity_stress": "Base Equity",
+    "average_default_probability": 0.3882538066395502
+  },
+  {
+    "leverage_stress": "Base Leverage",
+    "equity_stress": "Moderate LTV (+10%)",
+    "average_default_probability": 0.3882538066395502
+  },
+  {
+    "leverage_stress": "Base Leverage",
+    "equity_stress": "Severe LTV (+20%)",
+    "average_default_probability": 0.3882538066395502
+  },
+  {
+    "leverage_stress": "Moderate DTI (+5%)",
+    "equity_stress": "Base Equity",
+    "average_default_probability": 0.38811789855399204
+  },
+  {
+    "leverage_stress": "Moderate DTI (+5%)",
+    "equity_stress": "Moderate LTV (+10%)",
+    "average_default_probability": 0.38811789855399204
+  },
+  {
+    "leverage_stress": "Moderate DTI (+5%)",
+    "equity_stress": "Severe LTV (+20%)",
+    "average_default_probability": 0.38811789855399204
+  },
+  {
+    "leverage_stress": "Severe DTI (+12%)",
+    "equity_stress": "Base Equity",
+    "average_default_probability": 0.3881365224213281
+  },
+  {
+    "leverage_stress": "Severe DTI (+12%)",
+    "equity_stress": "Moderate LTV (+10%)",
+    "average_default_probability": 0.3881365224213281
+  },
+  {
+    "leverage_stress": "Severe DTI (+12%)",
+    "equity_stress": "Severe LTV (+20%)",
+    "average_default_probability": 0.3881365224213281
+  }
+]

@@ -1,7 +1,8 @@
-import React, { useState } from 'react';
-import { runScenario } from '../../services/api';
+import React, { useState, useEffect } from 'react';
+import { runScenario, getMonteCarlo, getStressSensitivity } from '../../services/api';
+import type { MonteCarloMetrics, StressSensitivityItem } from '../../services/api';
 import type { ScenarioResponse } from '../../types';
-import { Compass, AlertCircle, Sliders, Download, Sparkles, DollarSign } from 'lucide-react';
+import { Compass, AlertCircle, Sliders, Download, Sparkles, DollarSign, Activity } from 'lucide-react';
 import {
   ResponsiveContainer,
   BarChart,
@@ -28,6 +29,24 @@ export const Scenarios: React.FC = () => {
   const [result, setResult] = useState<ScenarioResponse | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+
+  // Advanced simulation states
+  const [mcData, setMcData] = useState<MonteCarloMetrics | null>(null);
+  const [sensitivityData, setSensitivityData] = useState<StressSensitivityItem[]>([]);
+
+  useEffect(() => {
+    const loadSimulationMetrics = async () => {
+      try {
+        const mc = await getMonteCarlo();
+        setMcData(mc);
+        const sens = await getStressSensitivity();
+        setSensitivityData(sens);
+      } catch (err) {
+        console.error("Error loading simulation indicators:", err);
+      }
+    };
+    loadSimulationMetrics();
+  }, []);
 
   const handleSimulate = async () => {
     try {
@@ -104,7 +123,7 @@ export const Scenarios: React.FC = () => {
   const handleDownloadCsv = () => {
     if (!result) return;
     const headers = selectedSegs.join(',') + ',Delinquency Rate,Default Rate,Prepayment Rate\n';
-    const csvContent = headers + result.segments.map(seg => 
+    const csvContent = headers + result.segments.map((seg: any) => 
       selectedSegs.map(s => seg[s]).join(',') + `,${seg.delinquency_rate},${seg.default_rate},${seg.prepayment_rate}`
     ).join('\n');
     
@@ -119,12 +138,94 @@ export const Scenarios: React.FC = () => {
   };
 
   // 4. Prepayment vs Default Risk Frontier coordinates
-  const scatterData = result ? result.segments.map((seg) => ({
+  const COLORS = ['#38a0f8', '#f59e0b', '#ef4444', '#10b981', '#a855f7', '#ec4899'];
+
+  const scatterData = result ? result.segments.map((seg: any) => ({
     name: selectedSegs.map(s => seg[s]).join(' - '),
     x: parseFloat((seg.default_rate * 100).toFixed(2)),
     y: parseFloat((seg.prepayment_rate * 100).toFixed(2)),
     z: 100
   })) : [];
+
+  const renderAdvancedSimulators = () => {
+    return (
+      <div className="space-y-6">
+        {/* Monte Carlo VaR Summary Card */}
+        {mcData && (
+          <div className="glass-panel rounded-xl p-5 space-y-4">
+            <h3 className="text-xs font-bold text-slate-350 uppercase tracking-wider flex items-center gap-1.5 border-b border-slate-800 pb-2">
+              <Sparkles className="h-4 w-4 text-brand-400" />
+              <span>Monte Carlo Portfolio VaR Analysis</span>
+            </h3>
+            <div className="grid grid-cols-1 md:grid-cols-4 gap-4 text-center">
+              <div className="bg-slate-950/40 p-3 rounded-lg border border-slate-850">
+                <span className="text-[10px] text-slate-500 font-bold block uppercase">Expected Loss</span>
+                <span className="text-sm font-bold text-white mt-1 block">{(mcData.metrics.mean_loss_rate * 100).toFixed(2)}%</span>
+                <span className="text-[9px] text-slate-450 font-mono">${Math.round(mcData.metrics.expected_losses).toLocaleString()}</span>
+              </div>
+              <div className="bg-slate-950/40 p-3 rounded-lg border border-slate-850">
+                <span className="text-[10px] text-rose-500 font-bold block uppercase">95% Value-at-Risk</span>
+                <span className="text-sm font-bold text-rose-455 mt-1 block">{(mcData.metrics.value_at_risk_95 * 100).toFixed(2)}%</span>
+                <span className="text-[9px] text-rose-355 font-mono">${Math.round(mcData.metrics.value_at_risk_95_amount).toLocaleString()}</span>
+              </div>
+              <div className="bg-slate-950/40 p-3 rounded-lg border border-slate-850">
+                <span className="text-[10px] text-rose-600 font-bold block uppercase">99% Value-at-Risk</span>
+                <span className="text-sm font-bold text-rose-500 mt-1 block">{(mcData.metrics.value_at_risk_99 * 100).toFixed(2)}%</span>
+                <span className="text-[9px] text-rose-400 font-mono">${Math.round(mcData.metrics.value_at_risk_99_amount).toLocaleString()}</span>
+              </div>
+              <div className="bg-slate-950/40 p-3 rounded-lg border border-slate-850">
+                <span className="text-[10px] text-emerald-500 font-bold block uppercase">Expected Yield</span>
+                <span className="text-sm font-bold text-emerald-400 mt-1 block">{(mcData.metrics.mean_interest_yield_rate * 100).toFixed(2)}%</span>
+                <span className="text-[9px] text-emerald-355 font-mono">${Math.round(mcData.metrics.expected_interest_earnings).toLocaleString()}</span>
+              </div>
+            </div>
+            <p className="text-[10px] text-slate-500 leading-normal">
+              Value-at-Risk (VaR) measures statistical credit losses over a 12-month horizon. 95% VaR indicates that portfolio write-offs will remain below this rate with 95% probability. 99% VaR represents extreme tail stress.
+            </p>
+          </div>
+        )}
+
+        {/* Stress Sensitivity Grid */}
+        {sensitivityData.length > 0 && (
+          <div className="glass-panel rounded-xl overflow-hidden shadow-xl animate-fadeIn">
+            <div className="px-5 py-3.5 bg-slate-800/40 border-b border-slate-850 flex items-center justify-between">
+              <h3 className="text-xs font-bold text-slate-350 tracking-wider uppercase flex items-center gap-1.5">
+                <Activity className="h-4 w-4 text-brand-400" />
+                <span>Borrower Leverage vs Property Equity Stress Sensitivity Matrix</span>
+              </h3>
+            </div>
+            <div className="overflow-x-auto text-[11px] text-slate-350">
+              <table className="w-full text-left border-collapse">
+                <thead>
+                  <tr className="bg-slate-900 border-b border-slate-800/80 font-bold text-slate-400">
+                    <th className="p-3">Borrower Leverage \ Equity</th>
+                    <th className="p-3 text-center">Base Equity</th>
+                    <th className="p-3 text-center">Moderate LTV (+10%)</th>
+                    <th className="p-3 text-center">Severe LTV (+20%)</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-slate-850/60">
+                  {["Base Leverage", "Moderate DTI (+5%)", "Severe DTI (+12%)"].map((lev, idx) => {
+                    const baseVal = sensitivityData.find(d => d.leverage_stress === lev && d.equity_stress === "Base Equity")?.average_default_probability ?? 0;
+                    const modVal = sensitivityData.find(d => d.leverage_stress === lev && d.equity_stress === "Moderate LTV (+10%)")?.average_default_probability ?? 0;
+                    const sevVal = sensitivityData.find(d => d.leverage_stress === lev && d.equity_stress === "Severe LTV (+20%)")?.average_default_probability ?? 0;
+                    return (
+                      <tr key={idx} className="hover:bg-slate-850/5">
+                        <td className="p-3 font-semibold text-slate-200">{lev}</td>
+                        <td className="p-3 text-center font-mono">{(baseVal * 100).toFixed(2)}%</td>
+                        <td className="p-3 text-center font-mono text-amber-450">{(modVal * 100).toFixed(2)}%</td>
+                        <td className="p-3 text-center font-mono text-rose-455">{(sevVal * 100).toFixed(2)}%</td>
+                      </tr>
+                    );
+                  })}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        )}
+      </div>
+    );
+  };
 
   return (
     <div className="flex-1 p-8 space-y-6 overflow-y-auto max-h-[calc(100vh-4rem)]">
@@ -278,10 +379,13 @@ export const Scenarios: React.FC = () => {
           )}
 
           {!result ? (
-            <div className="h-full border border-dashed border-slate-800 rounded-xl flex flex-col items-center justify-center text-center p-12 text-slate-500 space-y-3 min-h-[400px]">
-              <Compass className="h-10 w-10 text-slate-700" />
-              <h3 className="text-sm font-bold text-slate-400">Projections Pending</h3>
-              <p className="text-xs text-slate-500 max-w-xs">Configure your scenario multipliers and click simulate to plotstressed performance indicators.</p>
+            <div className="space-y-6 animate-fadeIn">
+              <div className="border border-dashed border-slate-800 rounded-xl flex flex-col items-center justify-center text-center p-12 text-slate-500 space-y-3 min-h-[220px]">
+                <Compass className="h-10 w-10 text-slate-700 animate-spin-slow" />
+                <h3 className="text-sm font-bold text-slate-400 font-sans">Projections Pending</h3>
+                <p className="text-xs text-slate-500 max-w-xs leading-relaxed font-sans">Configure your scenario multipliers and click simulate to plot stressed performance indicators.</p>
+              </div>
+              {renderAdvancedSimulators()}
             </div>
           ) : (
             <div className="space-y-6">
@@ -303,8 +407,8 @@ export const Scenarios: React.FC = () => {
 
                 {/* Portfolio Expected Loss Stress Delta Card */}
                 <div className="bg-rose-950/20 border border-rose-900/40 rounded-xl p-4 flex flex-col justify-between">
-                  <span className="text-[10px] text-rose-350 font-semibold uppercase flex items-center">
-                    <DollarSign className="h-3.5 w-3.5 mr-0.5 inline animate-pulse text-rose-450" />
+                  <span className="text-[10px] text-rose-355 font-semibold uppercase flex items-center">
+                    <DollarSign className="h-3.5 w-3.5 mr-0.5 inline animate-pulse text-rose-455" />
                     <span>Expected Stress Loss</span>
                   </span>
                   <div className="mt-2">
@@ -314,39 +418,37 @@ export const Scenarios: React.FC = () => {
                 </div>
               </div>
 
-              {/* Stress Chart */}
-              <div className="bg-slate-800/20 border border-slate-800 rounded-xl p-6">
-                <h3 className="text-xs font-bold text-slate-350 tracking-wider uppercase mb-4">Baseline vs. Stressed Comparison</h3>
-                <div className="h-56">
+              {/* Stress Projections Chart */}
+              <div className="bg-slate-800/20 border border-slate-800 rounded-xl p-5">
+                <h3 className="text-xs font-bold text-slate-350 tracking-wider uppercase mb-4">Cumulative State Projections (%)</h3>
+                <div className="h-64 text-xs">
                   <ResponsiveContainer width="100%" height="100%">
                     <BarChart data={chartData}>
-                      <XAxis dataKey="name" stroke="#475569" fontSize={10} />
-                      <YAxis stroke="#475569" fontSize={10} unit="%" />
-                      <Tooltip contentStyle={{ backgroundColor: '#0f172a', borderColor: '#1e293b', color: '#fff' }} />
+                      <XAxis dataKey="name" stroke="#64748b" />
+                      <YAxis stroke="#64748b" />
+                      <Tooltip contentStyle={{ backgroundColor: '#0f172a', borderColor: '#1e293b' }} />
                       <Legend />
-                      <Bar dataKey="Baseline" fill="#1e293b" radius={[4, 4, 0, 0]} />
-                      <Bar dataKey="Stressed" fill="#38a0f8" radius={[4, 4, 0, 0]} />
+                      <Bar dataKey="Delinquency" fill="#f59e0b" />
+                      <Bar dataKey="Default" fill="#ef4444" />
+                      <Bar dataKey="Prepayment" fill="#10b981" />
                     </BarChart>
                   </ResponsiveContainer>
                 </div>
               </div>
 
-              {/* Prepayment vs Default Risk Frontier scatter chart */}
-              <div className="bg-slate-800/20 border border-slate-800 rounded-xl p-6">
-                <h3 className="text-xs font-bold text-slate-350 tracking-wider uppercase mb-4 flex items-center space-x-1.5">
-                  <Sparkles className="h-3.5 w-3.5 text-brand-400" />
-                  <span>Prepayment vs Default Risk Frontier</span>
-                </h3>
-                <div className="h-52">
+              {/* Prepayment vs Default Risk Frontier Chart */}
+              <div className="bg-slate-800/20 border border-slate-800 rounded-xl p-5">
+                <h3 className="text-xs font-bold text-slate-350 tracking-wider uppercase mb-4">Segment Risk Frontier: Prepayment vs Default</h3>
+                <div className="h-64 text-xs">
                   <ResponsiveContainer width="100%" height="100%">
-                    <ScatterChart>
-                      <XAxis type="number" dataKey="x" name="Default" unit="%" stroke="#475569" fontSize={8} />
-                      <YAxis type="number" dataKey="y" name="Prepayment" unit="%" stroke="#475569" fontSize={8} />
-                      <ZAxis type="number" dataKey="z" range={[60, 100]} />
-                      <Tooltip cursor={{ strokeDasharray: '3 3' }} contentStyle={{ backgroundColor: '#0f172a', borderColor: '#1e293b', color: '#fff' }} />
-                      <Scatter name="Risk Segments" data={scatterData} fill="#8884d8">
-                        {scatterData.map((_, index) => (
-                          <Cell key={`cell-${index}`} fill={index % 2 === 0 ? '#ef4444' : '#10b981'} />
+                    <ScatterChart margin={{ top: 20, right: 20, bottom: 20, left: 20 }}>
+                      <XAxis type="number" dataKey="x" name="Default" unit="%" label={{ value: 'Default Rate (%)', position: 'bottom', offset: 0, fill: '#64748b' }} stroke="#64748b" />
+                      <YAxis type="number" dataKey="y" name="Prepayment" unit="%" label={{ value: 'Prepayment Rate (%)', angle: -90, position: 'left', offset: 0, fill: '#64748b' }} stroke="#64748b" />
+                      <ZAxis type="number" dataKey="z" range={[60, 60]} />
+                      <Tooltip cursor={{ strokeDasharray: '3 3' }} contentStyle={{ backgroundColor: '#0f172a', borderColor: '#1e293b' }} />
+                      <Scatter name="Segments" data={scatterData} fill="#38a0f8">
+                        {scatterData.map((_entry: any, index: number) => (
+                          <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
                         ))}
                       </Scatter>
                     </ScatterChart>
@@ -381,7 +483,7 @@ export const Scenarios: React.FC = () => {
                         </tr>
                       </thead>
                       <tbody className="divide-y divide-slate-800/40 text-slate-300">
-                        {result.segments.map((seg, i) => {
+                        {result.segments.map((seg: any, i: number) => {
                           const delinquencyDelta = seg.delinquency_rate - baselineRates.delinquency;
                           return (
                             <tr key={i} className="hover:bg-slate-800/10">
@@ -404,6 +506,9 @@ export const Scenarios: React.FC = () => {
                   </div>
                 </div>
               )}
+
+              {/* Monte Carlo & Sensitivity widgets (Stressed status) */}
+              {renderAdvancedSimulators()}
             </div>
           )}
         </div>

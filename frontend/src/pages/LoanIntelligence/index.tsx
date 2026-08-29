@@ -475,6 +475,27 @@ export const LoanIntelligence: React.FC = () => {
                 </div>
               </div>
 
+              {/* Counterfactual Adjustments Card */}
+              {explanation.counterfactuals && explanation.counterfactuals.length > 0 && (
+                <div className="bg-blue-950/20 border border-blue-900/60 rounded-xl p-5 space-y-3">
+                  <div className="flex items-center space-x-2 text-blue-400 font-semibold text-xs uppercase tracking-wide">
+                    <Activity className="h-4 w-4 text-blue-400" />
+                    <span>Counterfactual Recommendations (Path to Low Risk)</span>
+                  </div>
+                  <p className="text-[11px] text-slate-400 leading-normal">
+                    The following targeted modifications would statistically shift this loan from high-risk to prime/low-risk compliance status:
+                  </p>
+                  <ul className="space-y-2 text-xs">
+                    {explanation.counterfactuals.map((rec, idx) => (
+                      <li key={idx} className="flex items-start space-x-2 text-slate-200">
+                        <span className="h-1.5 w-1.5 rounded-full bg-blue-500 mt-1.5 flex-shrink-0"></span>
+                        <span>{rec}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              )}
+
               {/* Responsible AI Context */}
               <div className="bg-slate-800/10 border border-slate-800 p-4 rounded-lg flex space-x-3 text-xs text-slate-400">
                 <Info className="h-5 w-5 text-slate-500 flex-shrink-0 mt-0.5" />

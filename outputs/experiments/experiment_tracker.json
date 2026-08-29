@@ -1,0 +1,50 @@
+{
+  "experiment": "DefaultRiskModel",
+  "champion": {
+    "run_uuid": "25cb36309f6343e8bd1fe644e6f15378",
+    "hyperparameters": {
+      "learning_rate": 0.05,
+      "max_iter": 80,
+      "max_depth": 4
+    },
+    "roc_auc": 0.792177063823752
+  },
+  "all_runs": [
+    {
+      "run_uuid": "25cb36309f6343e8bd1fe644e6f15378",
+      "hyperparameters": {
+        "learning_rate": 0.05,
+        "max_iter": 80,
+        "max_depth": 4
+      },
+      "metrics": {
+        "roc_auc": 0.792177063823752,
+        "f1_score": 0.6869712351945855
+      }
+    },
+    {
+      "run_uuid": "f19c624fe6c64698bf7d92e29a1b0db8",
+      "hyperparameters": {
+        "learning_rate": 0.1,
+        "max_iter": 120,
+        "max_depth": 6
+      },
+      "metrics": {
+        "roc_auc": 0.7913561702302512,
+        "f1_score": 0.6869712351945855
+      }
+    },
+    {
+      "run_uuid": "1862d0f845d24a04b1e190af73b24361",
+      "hyperparameters": {
+        "learning_rate": 0.2,
+        "max_iter": 160,
+        "max_depth": 8
+      },
+      "metrics": {
+        "roc_auc": 0.7859397139853956,
+        "f1_score": 0.6677631578947368
+      }
+    }
+  ]
+}

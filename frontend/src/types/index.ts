@@ -132,6 +132,7 @@ export interface ExplanationResponse {
   confidence: number;
   false_positive_context: string | null;
   false_negative_context: string | null;
+  counterfactuals?: string[];
 }
 
 export interface ScenarioPortfolio {

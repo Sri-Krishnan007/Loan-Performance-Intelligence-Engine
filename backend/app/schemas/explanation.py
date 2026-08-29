@@ -12,3 +12,4 @@ class ExplanationResponse(BaseModel):
     confidence: float
     false_positive_context: Optional[str] = None
     false_negative_context: Optional[str] = None
+    counterfactuals: Optional[List[str]] = []

@@ -65,6 +65,12 @@ class ExplanationService:
             if not negative:
                 negative.append("clean_payment_history")
                 
+        # Calculate counterfactual suggestions
+        from src.explainability.explain import ModelExplainer
+        explainer = ModelExplainer([])
+        default_prob = float(latest_record.get("default_probability", 0.0))
+        counterfactuals = explainer.generate_counterfactuals(latest_record, default_prob)
+
         return {
             "loan_id": loan_id,
             "global_features": global_features,
@@ -74,5 +80,6 @@ class ExplanationService:
             },
             "confidence": float(latest_record.get("confidence", 0.80)),
             "false_positive_context": "Prediction false alarms occur mostly when servicer balance updates conflict with primary records.",
-            "false_negative_context": "Target omissions are mitigated by checking cumulative modification counts."
+            "false_negative_context": "Target omissions are mitigated by checking cumulative modification counts.",
+            "counterfactuals": counterfactuals
         }

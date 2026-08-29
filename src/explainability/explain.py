@@ -99,3 +99,45 @@ class ModelExplainer:
         neg_str = ";".join(negative_drivers) if negative_drivers else "None"
         
         return pos_str, neg_str
+
+    def generate_counterfactuals(self, row: pd.Series, default_probability: float) -> list[str]:
+        """
+        Determines targeted parameter corrections (counterfactual targets) 
+        required to move a high-risk loan profile into a low-risk status.
+        """
+        recommendations = []
+        
+        # Check if already low risk
+        if default_probability <= 0.05:
+            return ["Profile meets low-risk criteria. No counterfactual adjustments needed."]
+            
+        # 1. Delinquency correction
+        dpd = row.get("days_past_due", 0)
+        if dpd > 0:
+            recommendations.append(f"Cure outstanding delinquency (reduce current DPD of {int(dpd)} to 0)")
+            
+        # 2. Credit score improvements
+        fico = row.get("fico_score_val", -1)
+        if fico < 4: # FICO score band below 740-779
+            recommendations.append("Enhance credit score profile to FICO Band '740-779' or '780+'")
+            
+        # 3. LTV / Principal payoff
+        ltv = row.get("ltv_band_val", -1)
+        if ltv >= 3: # LTV ratio >= 80%
+            recommendations.append("Increase equity or reduce loan balance to achieve LTV Band '70-80' or lower")
+            
+        # 4. Debt service ratio reduction
+        dti = row.get("dti_band_val", -1)
+        if dti >= 2: # DTI ratio >= 30%
+            recommendations.append("Verify additional borrower income stream or reduce debt to lower DTI Band to '20-30' or lower")
+            
+        # 5. Document gaps check
+        doc_status = str(row.get("document_status", "Complete"))
+        if doc_status == "Missing":
+            recommendations.append("Provide and index missing loan compliance documentation")
+            
+        # Fallback if no specific driver matched but probability is high
+        if not recommendations:
+            recommendations.append("Review servicer updates and reduce principal balance to lower overall credit exposure")
+            
+        return recommendations
