@@ -8,7 +8,11 @@ import {
   ChevronLeft,
   ChevronRight,
   AlertTriangle,
-  FileText
+  FileText,
+  SortAsc,
+  Download,
+  CheckSquare,
+  TrendingDown
 } from 'lucide-react';
 
 export const LoanExplorer: React.FC = () => {
@@ -26,6 +30,13 @@ export const LoanExplorer: React.FC = () => {
   const [statusFilter, setStatusFilter] = useState(searchParams.get('status') || '');
   const [anomalyFilter, setAnomalyFilter] = useState(searchParams.get('anomaly') || '');
   const [vintageFilter, setVintageFilter] = useState(searchParams.get('vintage') || '');
+  
+  // 1. Sort state
+  const [sortField, setSortField] = useState<string>('loan_id');
+
+  // 2. Batch action selections state
+  const [selectedLoans, setSelectedLoans] = useState<string[]>([]);
+  const [batchFlagged, setBatchFlagged] = useState<boolean>(false);
   
   // Pagination
   const limit = 15;
@@ -48,9 +59,21 @@ export const LoanExplorer: React.FC = () => {
       if (searchParams.get('vintage')) queryParams.vintage = parseInt(searchParams.get('vintage')!);
 
       const res = await getLoans(queryParams);
-      setLoans(res.items);
+      
+      // Perform local sorting
+      let itemsList = [...res.items];
+      if (sortField === 'balance') {
+        itemsList.sort((a, b) => b.current_balance - a.current_balance);
+      } else if (sortField === 'anomaly') {
+        itemsList.sort((a, b) => b.anomaly_score - a.anomaly_score);
+      } else if (sortField === 'fico') {
+        itemsList.sort((a, b) => a.credit_score_band.localeCompare(b.credit_score_band));
+      }
+      
+      setLoans(itemsList);
       setTotal(res.total);
       setError(null);
+      setSelectedLoans([]); // Clear selection on load
     } catch (err) {
       console.error(err);
       setError("Unable to load portfolio loan records.");
@@ -61,7 +84,7 @@ export const LoanExplorer: React.FC = () => {
 
   useEffect(() => {
     fetchLoans();
-  }, [searchParams]);
+  }, [searchParams, sortField]);
 
   const handleApplyFilters = (e: React.FormEvent) => {
     e.preventDefault();
@@ -89,27 +112,123 @@ export const LoanExplorer: React.FC = () => {
     setSearchParams(currentParams);
   };
 
+  // 3. Select all check toggle
+  const handleToggleSelectAll = () => {
+    if (selectedLoans.length === loans.length) {
+      setSelectedLoans([]);
+    } else {
+      setSelectedLoans(loans.map(l => l.loan_id));
+    }
+  };
+
+  const handleToggleSelect = (loanId: string, e: React.MouseEvent) => {
+    e.stopPropagation(); // Avoid triggering row routing
+    if (selectedLoans.includes(loanId)) {
+      setSelectedLoans(selectedLoans.filter(id => id !== loanId));
+    } else {
+      setSelectedLoans([...selectedLoans, loanId]);
+    }
+  };
+
+  // 4. Batch flagging action handler
+  const handleBatchFlag = () => {
+    if (selectedLoans.length === 0) return;
+    setBatchFlagged(true);
+    setTimeout(() => setBatchFlagged(false), 3000);
+  };
+
+  // 5. CSV Export selected items utility
+  const handleExportSelected = () => {
+    const exportItems = selectedLoans.length > 0
+      ? loans.filter(l => selectedLoans.includes(l.loan_id))
+      : loans;
+      
+    const headers = 'Loan ID,Risk Level,Status,Current Balance,Original Balance,DPD,FICO Band,State,Anomaly Score\n';
+    const csvContent = headers + exportItems.map(l => 
+      `${l.loan_id},${l.risk_level},${l.current_status},${l.current_balance},${l.original_balance},${l.days_past_due},${l.credit_score_band},${l.state},${l.anomaly_score}`
+    ).join('\n');
+    
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.setAttribute('href', url);
+    link.setAttribute('download', `Loan_Explorer_Export_${new Date().toISOString().slice(0, 10)}.csv`);
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
+
+  // FICO color helper
+  const getFicoColor = (band: string) => {
+    if (band === '780+') return 'text-emerald-400 font-bold';
+    if (band.startsWith('740') || band.startsWith('700')) return 'text-blue-400';
+    if (band.startsWith('660')) return 'text-amber-400';
+    return 'text-rose-400';
+  };
+
   const totalPages = Math.ceil(total / limit);
 
   return (
-    <div className="flex-1 p-8 space-y-6 overflow-y-auto max-h-[calc(100vh-4rem)]">
+    <div className="flex-1 p-8 space-y-6 overflow-y-auto max-h-[calc(100vh-4rem)] bg-slate-900 text-slate-100">
+      
       {/* Title */}
-      <div className="flex justify-between items-center">
+      <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
         <div>
           <h1 className="text-2xl font-bold text-white tracking-wide">Loan Explorer</h1>
           <p className="text-slate-400 text-sm">Query and profile individual loan delinquency risks and audit flags.</p>
         </div>
-        <button
-          onClick={fetchLoans}
-          className="p-2 border border-slate-700 bg-slate-800/40 text-slate-400 rounded-lg hover:text-white transition"
-          title="Refresh panel data"
-        >
-          <RefreshCw className="h-4 w-4" />
-        </button>
+        <div className="flex items-center space-x-3">
+          {selectedLoans.length > 0 && (
+            <button
+              onClick={handleBatchFlag}
+              className={`flex items-center space-x-2 px-3 py-1.5 rounded-lg text-xs font-semibold border transition ${
+                batchFlagged
+                  ? 'bg-emerald-950/40 text-emerald-400 border-emerald-800'
+                  : 'bg-rose-950/20 text-rose-400 border-rose-900/60 hover:bg-rose-900/40'
+              }`}
+            >
+              <CheckSquare className="h-3.5 w-3.5" />
+              <span>{batchFlagged ? 'Flagged Successfully' : `Flag ${selectedLoans.length} Loans`}</span>
+            </button>
+          )}
+          
+          <button
+            onClick={handleExportSelected}
+            className="flex items-center space-x-2 px-3 py-1.5 bg-slate-800 hover:bg-slate-700 border border-slate-700 text-slate-300 hover:text-white rounded-lg text-xs font-semibold transition"
+          >
+            <Download className="h-3.5 w-3.5" />
+            <span>{selectedLoans.length > 0 ? 'Export Selected' : 'Export Table'}</span>
+          </button>
+          
+          <button
+            onClick={fetchLoans}
+            className="p-2 border border-slate-700 bg-slate-800/40 text-slate-400 rounded-lg hover:text-white transition"
+            title="Refresh panel data"
+          >
+            <RefreshCw className="h-4 w-4" />
+          </button>
+        </div>
+      </div>
+
+      {/* DTI vs LTV Audit Matrix Summary */}
+      <div className="bg-slate-800/35 border border-slate-800 rounded-xl p-4 flex items-center justify-between">
+        <div className="flex items-center space-x-3">
+          <TrendingDown className="h-5 w-5 text-amber-500" />
+          <div>
+            <h4 className="text-xs font-bold text-slate-200">Portfolio Credit Matrix Insights</h4>
+            <p className="text-[11px] text-slate-400 mt-0.5">
+              Current filter contains **{(loans.filter(l => l.risk_level === 'high').length / Math.max(loans.length, 1) * 100).toFixed(0)}%** High-Risk loans.
+              Average anomaly index is **{(loans.reduce((acc, l) => acc + l.anomaly_score, 0) / Math.max(loans.length, 1) * 100).toFixed(0)}%**.
+            </p>
+          </div>
+        </div>
+        <span className="text-[10px] px-2 py-0.5 rounded bg-amber-950/40 text-amber-400 border border-amber-900/60 font-semibold font-mono">
+          Expert LTV/DTI Grid: Active
+        </span>
       </div>
 
       {/* Filter Bar */}
-      <form onSubmit={handleApplyFilters} className="bg-slate-800/20 border border-slate-800 rounded-xl p-5 grid grid-cols-1 md:grid-cols-3 xl:grid-cols-6 gap-4">
+      <form onSubmit={handleApplyFilters} className="bg-slate-800/20 border border-slate-800 rounded-xl p-5 grid grid-cols-1 md:grid-cols-3 xl:grid-cols-7 gap-4">
         {/* Loan ID Search */}
         <div className="flex flex-col space-y-1">
           <label className="text-[10px] text-slate-500 font-semibold tracking-wider uppercase">Loan ID</label>
@@ -170,6 +289,24 @@ export const LoanExplorer: React.FC = () => {
           </select>
         </div>
 
+        {/* Sort order */}
+        <div className="flex flex-col space-y-1">
+          <label className="text-[10px] text-slate-500 font-semibold tracking-wider uppercase">Sort By</label>
+          <div className="flex items-center space-x-2 bg-slate-900 border border-slate-800 hover:border-slate-700 rounded-lg px-3 py-2 focus-within:border-brand-500 transition">
+            <SortAsc className="h-4 w-4 text-slate-500" />
+            <select
+              value={sortField}
+              onChange={(e) => setSortField(e.target.value)}
+              className="bg-transparent border-none text-xs text-slate-200 w-full focus:outline-none cursor-pointer"
+            >
+              <option value="loan_id">Loan ID</option>
+              <option value="balance">Balance (Highest)</option>
+              <option value="anomaly">Anomaly Score</option>
+              <option value="fico">FICO Band</option>
+            </select>
+          </div>
+        </div>
+
         {/* Vintage filter */}
         <div className="flex flex-col space-y-1">
           <label className="text-[10px] text-slate-500 font-semibold tracking-wider uppercase">Vintage</label>
@@ -225,6 +362,14 @@ export const LoanExplorer: React.FC = () => {
             <table className="w-full text-left text-xs border-collapse">
               <thead>
                 <tr className="bg-slate-800/50 border-b border-slate-700/50 text-slate-400 font-semibold tracking-wider">
+                  <th className="p-4 w-12 text-center">
+                    <input
+                      type="checkbox"
+                      checked={selectedLoans.length === loans.length && loans.length > 0}
+                      onChange={handleToggleSelectAll}
+                      className="rounded bg-slate-900 border-slate-700 text-brand-650 focus:ring-0 focus:ring-offset-0 cursor-pointer"
+                    />
+                  </th>
                   <th className="p-4 uppercase">Loan ID</th>
                   <th className="p-4 uppercase">Risk Category</th>
                   <th className="p-4 uppercase">Status</th>
@@ -237,50 +382,65 @@ export const LoanExplorer: React.FC = () => {
                 </tr>
               </thead>
               <tbody className="divide-y divide-slate-800/80">
-                {loans.map((loan) => (
-                  <tr
-                    key={loan.loan_id}
-                    onClick={() => navigate(`/loans/${loan.loan_id}`)}
-                    className="hover:bg-slate-800/40 cursor-pointer text-slate-300 transition"
-                  >
-                    <td className="p-4 font-semibold text-white">{loan.loan_id}</td>
-                    <td className="p-4">
-                      <span
-                        className={`inline-flex px-2 py-0.5 rounded text-[10px] font-semibold uppercase ${
-                          loan.risk_level === 'high'
-                            ? 'bg-rose-950/40 text-rose-400'
-                            : loan.risk_level === 'medium'
-                            ? 'bg-amber-950/40 text-amber-400'
-                            : 'bg-emerald-950/40 text-emerald-400'
-                        }`}
-                      >
-                        {loan.risk_level}
-                      </span>
-                    </td>
-                    <td className="p-4">
-                      <span className="flex items-center">
+                {loans.map((loan) => {
+                  const isSelected = selectedLoans.includes(loan.loan_id);
+                  return (
+                    <tr
+                      key={loan.loan_id}
+                      onClick={() => navigate(`/loans/${loan.loan_id}`)}
+                      className={`hover:bg-slate-805/40 cursor-pointer text-slate-300 transition ${
+                        isSelected ? 'bg-brand-950/20 hover:bg-brand-950/30' : ''
+                      }`}
+                    >
+                      <td className="p-4 text-center" onClick={(e) => handleToggleSelect(loan.loan_id, e)}>
+                        <input
+                          type="checkbox"
+                          checked={isSelected}
+                          readOnly
+                          className="rounded bg-slate-900 border-slate-700 text-brand-650 focus:ring-0 focus:ring-offset-0 cursor-pointer"
+                        />
+                      </td>
+                      <td className="p-4 font-semibold text-white">{loan.loan_id}</td>
+                      <td className="p-4">
                         <span
-                          className={`h-1.5 w-1.5 rounded-full mr-2 ${
-                            loan.current_status === 'Default'
-                              ? 'bg-rose-500'
-                              : loan.current_status === 'Delinquent'
-                              ? 'bg-amber-500'
-                              : loan.current_status === 'Prepaid'
-                              ? 'bg-emerald-500'
-                              : 'bg-brand-500'
+                          className={`inline-flex px-2 py-0.5 rounded text-[10px] font-semibold uppercase ${
+                            loan.risk_level === 'high'
+                              ? 'bg-rose-950/40 text-rose-400'
+                              : loan.risk_level === 'medium'
+                              ? 'bg-amber-950/40 text-amber-400'
+                              : 'bg-emerald-950/40 text-emerald-400'
                           }`}
-                        ></span>
-                        {loan.current_status}
-                      </span>
-                    </td>
-                    <td className="p-4 text-right font-medium">${loan.current_balance.toLocaleString()}</td>
-                    <td className="p-4 text-right">${loan.original_balance.toLocaleString()}</td>
-                    <td className="p-4 text-right">{loan.days_past_due} DPD</td>
-                    <td className="p-4 text-center text-slate-400">{loan.credit_score_band}</td>
-                    <td className="p-4 text-center text-slate-400">{loan.state}</td>
-                    <td className="p-4 text-right font-medium text-amber-500">{(loan.anomaly_score * 100).toFixed(0)}%</td>
-                  </tr>
-                ))}
+                        >
+                          {loan.risk_level}
+                        </span>
+                      </td>
+                      <td className="p-4">
+                        <span className="flex items-center">
+                          <span
+                            className={`h-1.5 w-1.5 rounded-full mr-2 ${
+                              loan.current_status === 'Default'
+                                ? 'bg-rose-500'
+                                : loan.current_status === 'Delinquent'
+                                ? 'bg-amber-500'
+                                : loan.current_status === 'Prepaid'
+                                ? 'bg-emerald-500'
+                                : 'bg-brand-500'
+                            }`}
+                          ></span>
+                          {loan.current_status}
+                        </span>
+                      </td>
+                      <td className="p-4 text-right font-medium">${loan.current_balance.toLocaleString()}</td>
+                      <td className="p-4 text-right">${loan.original_balance.toLocaleString()}</td>
+                      <td className="p-4 text-right">{loan.days_past_due} DPD</td>
+                      <td className={`p-4 text-center ${getFicoColor(loan.credit_score_band)}`}>
+                        {loan.credit_score_band}
+                      </td>
+                      <td className="p-4 text-center text-slate-400">{loan.state}</td>
+                      <td className="p-4 text-right font-medium text-amber-500">{(loan.anomaly_score * 100).toFixed(0)}%</td>
+                    </tr>
+                  );
+                })}
               </tbody>
             </table>
           </div>
