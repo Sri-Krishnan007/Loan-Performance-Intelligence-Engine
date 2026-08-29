@@ -128,7 +128,7 @@ Alternatively, you can run services individually:
 - Run Backend only: `npm run dev:backend` (available at http://localhost:3001)
 
 ### 4. Build for Production
-To build both applications:
+To build both applications::
 ```bash
 npm run build
 ```
