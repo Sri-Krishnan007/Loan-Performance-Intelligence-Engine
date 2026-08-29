@@ -4,6 +4,22 @@ An ML-first system for loan-data profiling, performance prediction, operational 
 
 ---
 
+## 📚 Deep-Dive & Domain Documentation
+* **[ML Deep-Dive & Interview Preparation Guide](file:///c:/Sk%20PC/My%20Guidelines/Placement%20Prep/INTAIN/LAC/loan-verification-copilot/docs/ml_deep_dive_interview_guide.md)**: A comprehensive guide covering:
+  - **Phase-by-Phase Process & Workflow** detailing the engineering rationale.
+  - **Metric Selection Rationale** (Why we use ROC-AUC, PR-AUC, F1, Recall at Fixed Precision, Brier, and ECE).
+  - **Probability Calibration & Monotonicity** (Isotonic Regression vs. Platt Scaling).
+  - **Survival Modeling** for competing default and prepayment risks.
+  - **Interview Q&A Prep Sheet** with expected questions and architectural defense strategies.
+* **[Mortgage Underwriting & Credit Domain Intelligence Guide](file:///c:/Sk%20PC/My%20Guidelines/Placement%20Prep/INTAIN/LAC/loan-verification-copilot/docs/loan_domain_intelligence_guide.md)**: A domain training guide explaining:
+  - **Underwriting Parameters & Limits** (FICO credit bands, LTV ratios, DTI bands).
+  - **Credit State Transitions** (Current, Delinquent [30+ DPD], Default [90+ DPD], and Prepayment).
+  - **Operational Exception & Auditing Rules** (Balance reconciliation conflicts, document status gaps).
+  - **Regulatory GSE Guidelines (Fannie Mae & Freddie Mac)** conforming thresholds.
+  - **Expected Loss & Loss Given Default (LGD)** formulas and stress-testing Presets.
+
+---
+
 ## 🚀 The Pipeline Flow (Tasks Completed)
 
 The engine processes data chronologically through a 9-phase pipeline:
