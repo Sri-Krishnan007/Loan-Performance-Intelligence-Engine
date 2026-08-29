@@ -42,6 +42,14 @@ This document outlines the AI-assisted development history, human review process
   2. Fixed a `KeyError: 'servicer_name'` in the scoring pipeline caused by columns renaming to `_primary` / `_servicer` suffix formats after left-joining test features.
   3. Resolved a syntax error in f-strings containing backslashes inside curly brace expressions.
 
+### E. Phase 10: Git Repository Clean-up & Local Startup Tuning
+* **Representative Prompt**:
+  *"Clean the git repository by ignoring scratch notes, log sheets, and PDFs while keeping datasets. Resolve backend module resolution errors."*
+* **Accepted Suggestion**: Standardizing project `README.md` to reflect the AI Track Problem Statement, and updating `.gitignore` to exclude `idea.txt`, `implement.md`, `walkthrough_done`, and reference PDFs.
+* **Human Correction**: 
+  1. Advised user on running Python backend from the monorepo root directory (`uvicorn backend.app.main:app`) to prevent absolute import errors (`ModuleNotFoundError: No module named 'backend'`).
+  2. Configured root and frontend dependencies via `npm run install:all` to resolve missing `concurrently` package errors.
+
 ---
 
 ## 3. Human Verification Examples

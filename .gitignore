@@ -49,3 +49,9 @@ venv/
 env/
 ENV/
 
+# Unwanted Development & Scratch Files (Not for Production Git Repository)
+idea.txt
+Intain_AI_Track_Problem_Statement.docx1e3a138.pdf
+implement.md
+walkthrough_done
+FRONTEND_REQUIREMENTS_FULL_HANDOFF.txt
