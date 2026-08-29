@@ -12,7 +12,7 @@ logger = logging.getLogger(__name__)
 
 class ReviewerService:
     @staticmethod
-    def run_llm_reviewer(loan_id: str) -> dict:
+    def run_llm_reviewer(loan_id: str, tone: str = "Standard") -> dict:
         """Invokes Groq LLM Reviewer with grounded ML metrics context."""
         if not loan_state.initialized:
             loan_state.initialize()
@@ -44,16 +44,16 @@ class ReviewerService:
         if api_key and api_key.startswith("gsk_"):
             try:
                 reviewer = LLMReviewer(api_key=api_key)
-                reviewer_note = reviewer.generate_reviewer_note(loan_record_dict, prediction_metrics_dict)
+                reviewer_note = reviewer.generate_reviewer_note(loan_record_dict, prediction_metrics_dict, tone)
                 model_name = reviewer.client.model
             except Exception as e:
                 logger.warning(f"Groq API call failed: {e}. Falling back to MockLLMReviewer.")
                 mock = MockLLMReviewer()
-                reviewer_note = mock.generate_reviewer_note(loan_record_dict, prediction_metrics_dict)
+                reviewer_note = mock.generate_reviewer_note(loan_record_dict, prediction_metrics_dict, tone)
         else:
             logger.info("GROQ_API_KEY is offline or empty. Using MockLLMReviewer.")
             mock = MockLLMReviewer()
-            reviewer_note = mock.generate_reviewer_note(loan_record_dict, prediction_metrics_dict)
+            reviewer_note = mock.generate_reviewer_note(loan_record_dict, prediction_metrics_dict, tone)
             
         # Parse note sections
         summary_idx = reviewer_note.find("**SUMMARY**")

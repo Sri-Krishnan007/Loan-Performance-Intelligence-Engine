@@ -12,12 +12,12 @@ class LLMReviewer:
         self.client = GroqClient(api_key=api_key, model=model)
         self.audit_logger = LLMAuditLogger()
 
-    def generate_reviewer_note(self, loan_record: dict, prediction_metrics: dict) -> str:
+    def generate_reviewer_note(self, loan_record: dict, prediction_metrics: dict, tone: str = "Standard") -> str:
         """
         Synthesizes loan static profile, anomalies, and model scores to generate reviewer natural-language reports.
         """
         loan_id = str(loan_record.get("loan_id", "Unknown"))
-        logger.info(f"Generating LLM reviewer note for loan {loan_id}...")
+        logger.info(f"Generating LLM reviewer note for loan {loan_id} in {tone} tone...")
         
         # Combine loan features and model predictions
         user_prompt = USER_LOAN_TEMPLATE.format(
@@ -44,9 +44,17 @@ class LLMReviewer:
             anomaly_evidence=str(prediction_metrics.get("anomaly_evidence", "No discrepancies"))
         )
         
+        tone_instruction = ""
+        if tone == "Conservative":
+            tone_instruction = "\n\nTONE INSTRUCTION (CONSERVATIVE): Emphasize potential default risks, document gaps, and reconciliation discrepancies. Recommend stricter underwriter audits and document verification."
+        elif tone == "Aggressive":
+            tone_instruction = "\n\nTONE INSTRUCTION (AGGRESSIVE): Highlight protective credit metrics (strong FICO, low LTV) and downplay minor discrepancies. Recommend standard routing unless critical anomalies exist."
+        else:
+            tone_instruction = "\n\nTONE INSTRUCTION (STANDARD): Write a balanced, objective risk report based on the provided metrics."
+
         # Call Groq API
         raw_response = self.client.chat_completion(
-            system_prompt=SYSTEM_REVIEWER_PROMPT,
+            system_prompt=SYSTEM_REVIEWER_PROMPT + tone_instruction,
             user_prompt=user_prompt
         )
         
@@ -56,7 +64,8 @@ class LLMReviewer:
         metadata = {
             "model": self.client.model,
             "predictions": prediction_metrics,
-            "disclaimer_checked": is_valid
+            "disclaimer_checked": is_valid,
+            "tone": tone
         }
         
         if is_valid:
@@ -68,14 +77,26 @@ class LLMReviewer:
             self.audit_logger.log_rejection(loan_id, user_prompt, raw_response, reason, corrected_note)
             self.audit_logger.log_completion(loan_id, user_prompt, corrected_note, metadata)
             return corrected_note
+
 class MockLLMReviewer:
     """Mock reviewer class for API test validation when Groq Key is offline."""
     
-    def generate_reviewer_note(self, loan_record: dict, prediction_metrics: dict) -> str:
+    def generate_reviewer_note(self, loan_record: dict, prediction_metrics: dict, tone: str = "Standard") -> str:
         loan_id = str(loan_record.get("loan_id", "Unknown"))
-        logger.info(f"Generating MOCK LLM reviewer note for loan {loan_id}...")
+        logger.info(f"Generating MOCK LLM reviewer note for loan {loan_id} in {tone} tone...")
         
+        tone_prefix = f"[{tone.upper()} ANALYSIS]"
+        tone_detail = ""
+        if tone == "Conservative":
+            tone_detail = "CRITICAL AUDIT ALERT: High sensitivity default thresholds violated. Underwriter caution is advised."
+        elif tone == "Aggressive":
+            tone_detail = "ROUTING UPDATE: Favorable borrower metrics observed. Standard routing path is suggested."
+        else:
+            tone_detail = "Standard risk assessment mapping completed."
+
         mock_note = f"""### MOCK REVIEWER NOTE - LOAN {loan_id}
+{tone_prefix} {tone_detail}
+
 Status is {loan_record.get("current_status")}. DPD = {loan_record.get("days_past_due")}. 
 ML 12m Default Risk: {prediction_metrics.get("default_probability", 0.0):.2%}.
 Reconciliation Discrepancies: {prediction_metrics.get("anomaly_evidence")}.

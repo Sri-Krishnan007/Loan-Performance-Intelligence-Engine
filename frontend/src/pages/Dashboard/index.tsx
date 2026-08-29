@@ -215,7 +215,7 @@ export const Dashboard: React.FC = () => {
         {kpis.map((kpi) => {
           const Icon = kpi.icon;
           return (
-            <div key={kpi.title} className="bg-slate-800/40 border border-slate-700/50 rounded-xl p-5 flex flex-col justify-between hover:border-slate-600 transition">
+            <div key={kpi.title} className="glass-panel glass-panel-hover rounded-xl p-5 flex flex-col justify-between">
               <div className="flex justify-between items-start">
                 <span className="text-xs text-slate-400 font-medium tracking-wide">{kpi.title}</span>
                 <span className={`p-1.5 rounded-lg ${kpi.color}`}>
@@ -235,7 +235,7 @@ export const Dashboard: React.FC = () => {
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         
         {/* Risk & Status Charts */}
-        <div className="lg:col-span-2 bg-slate-800/30 border border-slate-800 rounded-xl p-6 flex flex-col justify-between space-y-6">
+        <div className="lg:col-span-2 glass-panel rounded-xl p-6 flex flex-col justify-between space-y-6">
           <div className="flex justify-between items-center">
             <h2 className="text-sm font-semibold tracking-wider text-slate-300">Portfolio Distribution Models</h2>
             <span className="text-xs text-slate-500 font-mono">Cohort: {selectedVintage}</span>
@@ -307,7 +307,7 @@ export const Dashboard: React.FC = () => {
         </div>
 
         {/* Rapid Underwriter Alert Feed */}
-        <div className="bg-slate-800/30 border border-slate-800 rounded-xl p-6 flex flex-col justify-between">
+        <div className="glass-panel rounded-xl p-6 flex flex-col justify-between">
           <div>
             <div className="flex items-center justify-between mb-4">
               <h2 className="text-sm font-semibold tracking-wider text-slate-300">Deteriorating Risk Alert Feed</h2>
@@ -354,7 +354,7 @@ export const Dashboard: React.FC = () => {
       </div>
 
       {/* Historical Modeling Risk Trends */}
-      <div className="bg-slate-800/30 border border-slate-800 rounded-xl p-6">
+      <div className="glass-panel rounded-xl p-6">
         <h2 className="text-sm font-semibold tracking-wider text-slate-300 mb-4">Historical Modeling Risk Trends (OOT Window)</h2>
         <div className="h-64">
           <ResponsiveContainer width="100%" height="100%">
@@ -372,7 +372,7 @@ export const Dashboard: React.FC = () => {
       </div>
 
       {/* Quick Actions Panel */}
-      <div className="bg-slate-800/20 border border-slate-800 rounded-xl p-6">
+      <div className="glass-panel rounded-xl p-6">
         <h2 className="text-sm font-semibold tracking-wider text-slate-300 mb-4">Reviewer Quick Actions</h2>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
           <button

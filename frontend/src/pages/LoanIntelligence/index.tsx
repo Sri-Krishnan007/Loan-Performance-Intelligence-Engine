@@ -233,7 +233,7 @@ export const LoanIntelligence: React.FC = () => {
       </div>
 
       {/* Tab Panels */}
-      <div className="bg-slate-900 border border-slate-800/60 rounded-xl p-6 min-h-[400px]">
+      <div className="glass-panel rounded-xl p-6 min-h-[400px]">
         {/* Tab 1: Overview */}
         {activeTab === 'overview' && (
           <div className="space-y-6">
@@ -257,7 +257,7 @@ export const LoanIntelligence: React.FC = () => {
                     { label: 'Loan Purpose', value: loan.loan_purpose },
                     { label: 'Property Type', value: loan.property_type },
                   ].map((item, idx) => (
-                    <div key={idx} className="bg-slate-800/20 border border-slate-800 rounded-lg p-4 flex flex-col justify-between">
+                    <div key={idx} className="glass-panel glass-panel-hover rounded-lg p-4 flex flex-col justify-between">
                       <span className="text-[10px] text-slate-500 font-semibold uppercase tracking-wider">{item.label}</span>
                       <span className="text-sm font-bold text-white mt-1.5">{item.value}</span>
                     </div>
@@ -266,7 +266,7 @@ export const LoanIntelligence: React.FC = () => {
               </div>
 
               {/* GSE Agency Guideline Checker */}
-              <div className="bg-slate-800/20 border border-slate-800 rounded-xl p-5 space-y-4">
+              <div className="glass-panel rounded-xl p-5 space-y-4">
                 <h3 className="text-xs font-bold text-slate-300 tracking-wider uppercase flex items-center space-x-2">
                   <FileCheck2 className="h-4 w-4 text-brand-400" />
                   <span>Agency Guideline Audit</span>

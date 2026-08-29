@@ -5,9 +5,10 @@ import type { LoanItem, ReviewerResponse } from '../../types';
 import { AlertCircle, AlertTriangle, FileText, CheckCircle, HelpCircle, Check, X, ShieldAlert } from 'lucide-react';
 
 export const Reviewer: React.FC = () => {
-  const [searchParams] = useSearchParams();
+  const [searchParams, setSearchParams] = useSearchParams();
   const [loans, setLoans] = useState<LoanItem[]>([]);
   const [selectedId, setSelectedId] = useState(searchParams.get('loan_id') || '');
+  const [tone, setTone] = useState<string>(searchParams.get('tone') || 'Standard');
   
   const [review, setReview] = useState<ReviewerResponse | null>(null);
   const [loading, setLoading] = useState(false);
@@ -37,15 +38,34 @@ export const Reviewer: React.FC = () => {
       try {
         const res = await getLoans({ risk_level: 'high', limit: 20 });
         setLoans(res.items);
-        if (res.items.length > 0 && !selectedId) {
+        
+        const qLoanId = searchParams.get('loan_id');
+        const qTone = searchParams.get('tone') || 'Standard';
+        
+        if (qTone) {
+          setTone(qTone);
+        }
+        
+        if (qLoanId) {
+          setSelectedId(qLoanId);
+          // Auto generate
+          setLoading(true);
+          setError(null);
+          setSubmitStatus(null);
+          setIsFlagged(false);
+          const reviewRes = await generateReviewer(qLoanId, qTone);
+          setReview(reviewRes);
+        } else if (res.items.length > 0) {
           setSelectedId(res.items[0].loan_id);
         }
       } catch (err) {
         console.error(err);
+      } finally {
+        setLoading(false);
       }
     };
     fetchHighRisk();
-  }, []);
+  }, [searchParams]);
 
   const handleGenerate = async () => {
     if (!selectedId) return;
@@ -54,8 +74,9 @@ export const Reviewer: React.FC = () => {
       setError(null);
       setSubmitStatus(null);
       setIsFlagged(false);
-      const res = await generateReviewer(selectedId);
+      const res = await generateReviewer(selectedId, tone);
       setReview(res);
+      setSearchParams({ loan_id: selectedId, tone });
     } catch (err) {
       console.error(err);
       setError("Failed to generate AI Reviewer copilot note.");
@@ -99,7 +120,7 @@ export const Reviewer: React.FC = () => {
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Controls Column */}
-        <div className="bg-slate-800/20 border border-slate-800 rounded-xl p-5 space-y-6 h-fit">
+        <div className="glass-panel rounded-xl p-5 space-y-6 h-fit">
           <div className="space-y-3">
             <h3 className="text-xs font-bold text-slate-300 tracking-wider uppercase">Select High-Risk Loan ID</h3>
             <select
@@ -114,6 +135,22 @@ export const Reviewer: React.FC = () => {
                 </option>
               ))}
             </select>
+          </div>
+
+          <div className="space-y-3">
+            <h3 className="text-xs font-bold text-slate-300 tracking-wider uppercase">AI Review Prompt Tone</h3>
+            <select
+              value={tone}
+              onChange={(e) => setTone(e.target.value)}
+              className="w-full bg-slate-900 border border-slate-800 text-xs text-white rounded-lg px-3 py-2.5 focus:outline-none transition"
+            >
+              <option value="Standard">Standard Tone</option>
+              <option value="Conservative">Conservative Tone</option>
+              <option value="Aggressive">Aggressive Tone</option>
+            </select>
+            <p className="text-[10px] text-slate-505 leading-tight">
+              Adjusts LLM criteria guidelines to emphasize risks or highlight positive underwriting metrics.
+            </p>
           </div>
 
           <button
@@ -191,12 +228,19 @@ export const Reviewer: React.FC = () => {
               </div>
 
               {/* Summary details */}
-              <div className="bg-slate-800/20 border border-slate-800 rounded-xl p-5 space-y-4">
+              <div className="glass-panel rounded-xl p-5 space-y-4">
                 {/* 3. AI Grounding Confidence Meter */}
                 <div className="flex justify-between items-center border-b border-slate-800/60 pb-3">
                   <div className="flex items-center space-x-2">
                     <span className="text-xs font-bold text-white">AI Grounding Index</span>
                     <span className="text-[10px] px-1.5 py-0.5 rounded bg-emerald-950 text-emerald-400 font-mono font-semibold">GSE Verified</span>
+                    <span className={`text-[10px] px-1.5 py-0.5 rounded font-mono font-semibold uppercase ${
+                      tone === 'Conservative' ? 'bg-rose-950/65 text-rose-450 border border-rose-900/60' :
+                      tone === 'Aggressive' ? 'bg-blue-950/65 text-blue-450 border border-blue-900/60' :
+                      'bg-slate-800 text-slate-350 border border-slate-700/60'
+                    }`}>
+                      {tone} Tone
+                    </span>
                   </div>
                   <div className="flex items-center space-x-2">
                     <div className="w-24 h-2 bg-slate-800 rounded-full overflow-hidden">
@@ -247,7 +291,7 @@ export const Reviewer: React.FC = () => {
               </div>
 
               {/* Human Decision Form */}
-              <div className="bg-slate-800/30 border border-slate-800 rounded-xl p-5">
+              <div className="glass-panel rounded-xl p-5">
                 <h3 className="text-xs font-bold text-slate-300 tracking-wider uppercase mb-4">Underwriter Action Panel</h3>
                 <form onSubmit={handleSubmitDecision} className="space-y-4 text-xs">
                   {/* Buttons selection */}

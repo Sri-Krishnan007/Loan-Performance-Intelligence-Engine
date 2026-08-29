@@ -211,7 +211,7 @@ export const LoanExplorer: React.FC = () => {
       </div>
 
       {/* DTI vs LTV Audit Matrix Summary */}
-      <div className="bg-slate-800/35 border border-slate-800 rounded-xl p-4 flex items-center justify-between">
+      <div className="glass-panel rounded-xl p-4 flex items-center justify-between">
         <div className="flex items-center space-x-3">
           <TrendingDown className="h-5 w-5 text-amber-500" />
           <div>
@@ -228,7 +228,7 @@ export const LoanExplorer: React.FC = () => {
       </div>
 
       {/* Filter Bar */}
-      <form onSubmit={handleApplyFilters} className="bg-slate-800/20 border border-slate-800 rounded-xl p-5 grid grid-cols-1 md:grid-cols-3 xl:grid-cols-7 gap-4">
+      <form onSubmit={handleApplyFilters} className="glass-panel rounded-xl p-5 grid grid-cols-1 md:grid-cols-3 xl:grid-cols-7 gap-4">
         {/* Loan ID Search */}
         <div className="flex flex-col space-y-1">
           <label className="text-[10px] text-slate-500 font-semibold tracking-wider uppercase">Loan ID</label>
@@ -357,7 +357,7 @@ export const LoanExplorer: React.FC = () => {
           <p className="text-xs text-slate-500 max-w-sm">Try clearing your filters or testing other query substrings.</p>
         </div>
       ) : (
-        <div className="bg-slate-800/20 border border-slate-800 rounded-xl overflow-hidden shadow-xl">
+        <div className="glass-panel rounded-xl overflow-hidden shadow-xl">
           <div className="overflow-x-auto">
             <table className="w-full text-left text-xs border-collapse">
               <thead>

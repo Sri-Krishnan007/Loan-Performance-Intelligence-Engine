@@ -3,6 +3,7 @@ from typing import List, Optional
 
 class ReviewerRequest(BaseModel):
     loan_id: str
+    tone: Optional[str] = "Standard"
 
 class ReviewerResponse(BaseModel):
     loan_id: str

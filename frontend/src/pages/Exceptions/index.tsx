@@ -91,7 +91,7 @@ export const Exceptions: React.FC = () => {
       </div>
 
       {/* Filters Bar */}
-      <div className="bg-slate-800/20 border border-slate-800 rounded-xl p-5 flex flex-col md:flex-row md:items-center justify-between gap-6">
+      <div className="glass-panel rounded-xl p-5 flex flex-col md:flex-row md:items-center justify-between gap-6">
         <div className="flex flex-wrap gap-4">
           <div className="flex flex-col space-y-1">
             <label className="text-[10px] text-slate-500 font-semibold uppercase tracking-wider">Severity</label>
@@ -159,7 +159,7 @@ export const Exceptions: React.FC = () => {
           No exceptions flagged matching query criteria.
         </div>
       ) : (
-        <div className="bg-slate-800/20 border border-slate-800 rounded-xl overflow-hidden shadow-xl">
+        <div className="glass-panel rounded-xl overflow-hidden shadow-xl">
           <div className="overflow-x-auto">
             <table className="w-full text-left text-xs border-collapse">
               <thead>

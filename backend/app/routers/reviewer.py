@@ -7,7 +7,7 @@ router = APIRouter(prefix="/reviewer", tags=["Reviewer"])
 @router.post("", response_model=ReviewerResponse)
 def run_reviewer_copilot(payload: ReviewerRequest):
     """Generates a natural-language copilot review summary grounded on ML indicators."""
-    res = ReviewerService.run_llm_reviewer(payload.loan_id)
+    res = ReviewerService.run_llm_reviewer(payload.loan_id, payload.tone)
     return ReviewerResponse(
         loan_id=res["loan_id"],
         summary=res["summary"],

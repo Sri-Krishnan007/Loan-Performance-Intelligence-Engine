@@ -8,6 +8,7 @@ import { Exceptions } from './pages/Exceptions';
 import { Scenarios } from './pages/Scenarios';
 import { Reviewer } from './pages/Reviewer';
 import { ModelHealth } from './pages/ModelHealth';
+import { LivePredictor } from './pages/LivePredictor';
 
 function App() {
   return (
@@ -25,6 +26,7 @@ function App() {
               <Route path="/exceptions" element={<Exceptions />} />
               <Route path="/scenarios" element={<Scenarios />} />
               <Route path="/reviewer" element={<Reviewer />} />
+              <Route path="/predict" element={<LivePredictor />} />
               <Route path="/model-health" element={<ModelHealth />} />
               <Route path="*" element={<Navigate to="/dashboard" replace />} />
             </Routes>

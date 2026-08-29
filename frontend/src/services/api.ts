@@ -286,11 +286,11 @@ export const runScenario = async (scenario: string, segments: string[]): Promise
   }
 };
 
-export const generateReviewer = async (loanId: string): Promise<T.ReviewerResponse> => {
+export const generateReviewer = async (loanId: string, tone: string = 'Standard'): Promise<T.ReviewerResponse> => {
   if (isMockModeActive()) {
     return {
       loan_id: loanId,
-      summary: "This loan exhibits high default probability metrics matching payment discrepancies.",
+      summary: `[${tone.toUpperCase()} TONE] This loan exhibits high default probability metrics matching payment discrepancies.`,
       recommendation: "Priority Review recommended. Resolve the servicer days past due conflict.",
       action: "Priority Review",
       confidence: 0.82,
@@ -301,13 +301,13 @@ export const generateReviewer = async (loanId: string): Promise<T.ReviewerRespon
     };
   }
   try {
-    const res = await client.post<T.ReviewerResponse>('/reviewer', { loan_id: loanId });
+    const res = await client.post<T.ReviewerResponse>('/reviewer', { loan_id: loanId, tone });
     return res.data;
   } catch (err) {
     console.warn("Backend /reviewer unavailable, falling back to mock data.", err);
     return {
       loan_id: loanId,
-      summary: "This loan exhibits high default probability metrics matching payment discrepancies.",
+      summary: `[${tone.toUpperCase()} TONE] This loan exhibits high default probability metrics matching payment discrepancies.`,
       recommendation: "Priority Review recommended. Resolve the servicer days past due conflict.",
       action: "Priority Review",
       confidence: 0.82,
@@ -338,6 +338,76 @@ export const submitReviewerDecision = async (loanId: string, decision: string, r
       loan_id: loanId,
       decision,
       timestamp: new Date().toISOString()
+    };
+  }
+};
+
+export interface LivePredictionPayload {
+  fico_score: number;
+  ltv: number;
+  dti: number;
+  original_balance: number;
+  current_balance: number;
+  interest_rate: number;
+  days_past_due: number;
+  document_status: string;
+  state: string;
+  loan_purpose: string;
+  occupancy_type: string;
+  property_type: string;
+  servicer_name: string;
+  current_status: string;
+  modification_flag: number;
+  prepayment_flag: number;
+  
+  // Optional servicer update reconciliation fields
+  servicer_current_balance?: number;
+  servicer_days_past_due?: number;
+  servicer_document_status?: string;
+  servicer_status?: string;
+}
+
+export interface LivePredictionResult {
+  delinquency_probability: number;
+  default_probability: number;
+  prepayment_probability: number;
+  next_state: string;
+  confidence: number;
+  anomaly_score: number;
+  exception_type: string;
+  action: string;
+  top_drivers: string;
+}
+
+export const predictLive = async (payload: LivePredictionPayload): Promise<LivePredictionResult> => {
+  if (isMockModeActive()) {
+    return {
+      delinquency_probability: payload.days_past_due > 0 ? 0.42 : 0.08,
+      default_probability: payload.fico_score < 620 ? 0.15 : 0.02,
+      prepayment_probability: payload.interest_rate > 6.5 ? 0.12 : 0.03,
+      next_state: payload.days_past_due >= 30 ? "DELINQUENT" : payload.current_status.toUpperCase(),
+      confidence: 0.88,
+      anomaly_score: payload.servicer_current_balance && Math.abs(payload.current_balance - payload.servicer_current_balance) > 10 ? 0.75 : 0.15,
+      exception_type: payload.days_past_due >= 60 ? "Severe Delinquency" : payload.document_status === "Missing" ? "Documentation Gap" : "None",
+      action: payload.days_past_due >= 60 ? "Priority Review" : "No Action",
+      top_drivers: payload.fico_score < 620 ? "fico_score_val" : "None"
+    };
+  }
+  try {
+    const res = await client.post<LivePredictionResult>('/loans/predict', payload);
+    return res.data;
+  } catch (err) {
+    console.warn("Backend live /loans/predict unavailable, falling back to mock predictions.", err);
+    return {
+      delinquency_probability: payload.days_past_due > 0 ? 0.42 : 0.08,
+      default_probability: payload.fico_score < 620 ? 0.15 : 0.02,
+      prepayment_probability: payload.interest_rate > 6.5 ? 0.12 : 0.03,
+      next_state: payload.days_past_due >= 30 ? "DELINQUENT" : payload.current_status.toUpperCase(),
+      confidence: 0.88,
+      anomaly_score: payload.servicer_current_balance && Math.abs(payload.current_balance - payload.servicer_current_balance) > 10 ? 0.75 : 0.15,
+      exception_type: payload.days_past_due >= 60 ? "Severe Delinquency" : payload.document_status === "Missing" ? "Documentation Gap" : "None",
+      action: payload.days_past_due >= 60 ? "Priority Review" : "No Action",
+      top_drivers: payload.fico_score < 620 ? "fico_score_val" : "None"
     };
   }
 };

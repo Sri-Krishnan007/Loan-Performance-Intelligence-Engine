@@ -6,7 +6,8 @@ import {
   AlertTriangle,
   Compass,
   FileSearch,
-  TrendingUp
+  TrendingUp,
+  Sparkles
 } from 'lucide-react';
 
 export const Sidebar: React.FC = () => {
@@ -16,6 +17,7 @@ export const Sidebar: React.FC = () => {
     { to: '/exceptions', label: 'Exception Center', icon: AlertTriangle },
     { to: '/scenarios', label: 'Scenario Simulator', icon: Compass },
     { to: '/reviewer', label: 'AI Reviewer', icon: FileSearch },
+    { to: '/predict', label: 'Live Predictor', icon: Sparkles },
     { to: '/model-health', label: 'Model & Data Health', icon: TrendingUp },
   ];
 
