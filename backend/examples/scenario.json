@@ -1,0 +1,22 @@
+{
+  "scenario": "ADVERSE_CREDIT",
+  "portfolio": {
+    "delinquency_rate": 0.1029,
+    "default_rate": 0.0384,
+    "prepayment_rate": 0.0067
+  },
+  "segments": [
+    {
+      "credit_band": "660-699",
+      "state": "CA",
+      "delinquency_rate": 0.125,
+      "default_rate": 0.045,
+      "prepayment_rate": 0.005
+    }
+  ],
+  "drivers": [
+    {"variable": "Delinquency Multiplier", "value": 1.75},
+    {"variable": "Default Multiplier", "value": 2.25},
+    {"variable": "Prepayment Multiplier", "value": 0.50}
+  ]
+}

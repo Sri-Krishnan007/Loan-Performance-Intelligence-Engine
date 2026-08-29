@@ -4,10 +4,10 @@
   "private": true,
   "scripts": {
     "dev:frontend": "npm run dev --prefix frontend",
-    "dev:backend": "npm run dev --prefix backend",
+    "dev:backend": "uvicorn backend.app.main:app --port 8000 --reload",
     "dev": "concurrently \"npm run dev:backend\" \"npm run dev:frontend\"",
-    "build": "npm run build --prefix backend && npm run build --prefix frontend",
-    "install:all": "npm install && npm install --prefix backend && npm install --prefix frontend"
+    "build": "npm run build --prefix frontend",
+    "install:all": "npm install && npm install --prefix frontend"
   },
   "devDependencies": {
     "concurrently": "^8.2.2"

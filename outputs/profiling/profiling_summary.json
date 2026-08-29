@@ -1,0 +1,374 @@
+{
+  "loan_id": {
+    "dtype": "object",
+    "null_count": 0,
+    "null_pct": 0.0,
+    "unique_count": 2000,
+    "top_categories": {
+      "LN101621": 103,
+      "LN101806": 103,
+      "LN100299": 102,
+      "LN101868": 101,
+      "LN100816": 100,
+      "LN101870": 100,
+      "LN100969": 100,
+      "LN101098": 100,
+      "LN101445": 100,
+      "LN101652": 99
+    }
+  },
+  "month_index": {
+    "dtype": "int64",
+    "null_count": 0,
+    "null_pct": 0.0,
+    "unique_count": 103,
+    "mean": 25.661044108965168,
+    "std": 20.64807805287042,
+    "min": 0.0,
+    "max": 102.0,
+    "median": 21.0
+  },
+  "reporting_month": {
+    "dtype": "datetime64[ns]",
+    "null_count": 0,
+    "null_pct": 0.0,
+    "unique_count": 103
+  },
+  "origination_month": {
+    "dtype": "datetime64[ns]",
+    "null_count": 0,
+    "null_pct": 0.0,
+    "unique_count": 84
+  },
+  "loan_age_months": {
+    "dtype": "int64",
+    "null_count": 0,
+    "null_pct": 0.0,
+    "unique_count": 103,
+    "mean": 25.661044108965168,
+    "std": 20.64807805287042,
+    "min": 0.0,
+    "max": 102.0,
+    "median": 21.0
+  },
+  "remaining_term_months": {
+    "dtype": "int64",
+    "null_count": 0,
+    "null_pct": 0.0,
+    "unique_count": 268,
+    "mean": 297.46959601922913,
+    "std": 58.377151977355844,
+    "min": 93.0,
+    "max": 360.0,
+    "median": 319.0
+  },
+  "original_balance": {
+    "dtype": "float64",
+    "null_count": 0,
+    "null_pct": 0.0,
+    "unique_count": 1969,
+    "mean": 289022.6723867757,
+    "std": 168101.28977912702,
+    "min": 75000.0,
+    "max": 1500000.0,
+    "median": 246695.24
+  },
+  "current_balance": {
+    "dtype": "float64",
+    "null_count": 0,
+    "null_pct": 0.0,
+    "unique_count": 71056,
+    "mean": 272733.02110581653,
+    "std": 161019.90422508406,
+    "min": 6.68,
+    "max": 1500000.0,
+    "median": 232941.565
+  },
+  "interest_rate": {
+    "dtype": "float64",
+    "null_count": 0,
+    "null_pct": 0.0,
+    "unique_count": 1658,
+    "mean": 4.451530642939472,
+    "std": 1.4785518769621258,
+    "min": 2.0,
+    "max": 8.809,
+    "median": 4.199
+  },
+  "credit_score_band": {
+    "dtype": "category",
+    "null_count": 0,
+    "null_pct": 0.0,
+    "unique_count": 6,
+    "top_categories": {
+      "700-739": 20309,
+      "740-779": 17909,
+      "780+": 13522,
+      "660-699": 11752,
+      "620-659": 6167,
+      "580-619": 1483
+    }
+  },
+  "ltv_band": {
+    "dtype": "category",
+    "null_count": 0,
+    "null_pct": 0.0,
+    "unique_count": 5,
+    "top_categories": {
+      "70-80": 20719,
+      "60-70": 15890,
+      "80-90": 14436,
+      "0-60": 13739,
+      "90-100": 6358
+    }
+  },
+  "dti_band": {
+    "dtype": "category",
+    "null_count": 0,
+    "null_pct": 0.0,
+    "unique_count": 4,
+    "top_categories": {
+      "20-30": 25822,
+      "30-40": 21616,
+      "0-20": 17784,
+      "40-50": 5920
+    }
+  },
+  "state": {
+    "dtype": "category",
+    "null_count": 0,
+    "null_pct": 0.0,
+    "unique_count": 50,
+    "top_categories": {
+      "MT": 2464,
+      "AZ": 1967,
+      "ND": 1826,
+      "GA": 1733,
+      "RI": 1699,
+      "OK": 1697,
+      "SD": 1671,
+      "FL": 1667,
+      "LA": 1661,
+      "ID": 1651
+    }
+  },
+  "loan_purpose": {
+    "dtype": "category",
+    "null_count": 0,
+    "null_pct": 0.0,
+    "unique_count": 2,
+    "top_categories": {
+      "Purchase": 49212,
+      "Refinance": 21930
+    }
+  },
+  "occupancy_type": {
+    "dtype": "category",
+    "null_count": 0,
+    "null_pct": 0.0,
+    "unique_count": 3,
+    "top_categories": {
+      "Primary Residence": 54607,
+      "Investment": 8612,
+      "Second Home": 7923
+    }
+  },
+  "property_type": {
+    "dtype": "category",
+    "null_count": 0,
+    "null_pct": 0.0,
+    "unique_count": 4,
+    "top_categories": {
+      "Single Family": 41053,
+      "Condominium": 12617,
+      "Townhouse": 12041,
+      "Multi Unit": 5431
+    }
+  },
+  "servicer_name": {
+    "dtype": "category",
+    "null_count": 0,
+    "null_pct": 0.0,
+    "unique_count": 5,
+    "top_categories": {
+      "Servicer_A": 20010,
+      "Servicer_B": 16605,
+      "Servicer_C": 15418,
+      "Servicer_D": 11451,
+      "Servicer_E": 7658
+    }
+  },
+  "current_status": {
+    "dtype": "category",
+    "null_count": 0,
+    "null_pct": 0.0,
+    "unique_count": 4,
+    "top_categories": {
+      "Current": 67492,
+      "Delinquent": 2329,
+      "Default": 834,
+      "Prepaid": 487
+    }
+  },
+  "days_past_due": {
+    "dtype": "int64",
+    "null_count": 0,
+    "null_pct": 0.0,
+    "unique_count": 4,
+    "mean": 2.1354474150290965,
+    "std": 11.368204079605938,
+    "min": 0.0,
+    "max": 90.0,
+    "median": 0.0
+  },
+  "modification_flag": {
+    "dtype": "Int64",
+    "null_count": 0,
+    "null_pct": 0.0,
+    "unique_count": 2,
+    "mean": 0.020648843158752917,
+    "std": 0.14220672520645045,
+    "min": 0.0,
+    "max": 1.0,
+    "median": 0.0
+  },
+  "prepayment_flag": {
+    "dtype": "Int64",
+    "null_count": 0,
+    "null_pct": 0.0,
+    "unique_count": 2,
+    "mean": 0.006845464001574316,
+    "std": 0.08245422481215675,
+    "min": 0.0,
+    "max": 1.0,
+    "median": 0.0
+  },
+  "default_flag": {
+    "dtype": "Int64",
+    "null_count": 0,
+    "null_pct": 0.0,
+    "unique_count": 2,
+    "mean": 0.011723032807624188,
+    "std": 0.10763719693262398,
+    "min": 0.0,
+    "max": 1.0,
+    "median": 0.0
+  },
+  "loss_severity_band": {
+    "dtype": "category",
+    "null_count": 70308,
+    "null_pct": 0.9882769671923758,
+    "unique_count": 3,
+    "top_categories": {
+      "Medium": 348,
+      "Low": 308,
+      "High": 178
+    }
+  },
+  "last_updated_at": {
+    "dtype": "datetime64[ns]",
+    "null_count": 0,
+    "null_pct": 0.0,
+    "unique_count": 41467
+  },
+  "source_system": {
+    "dtype": "category",
+    "null_count": 0,
+    "null_pct": 0.0,
+    "unique_count": 3,
+    "top_categories": {
+      "ServicingCore": 42637,
+      "LoanPlatform": 17848,
+      "RiskSystem": 10657
+    }
+  },
+  "document_status": {
+    "dtype": "category",
+    "null_count": 0,
+    "null_pct": 0.0,
+    "unique_count": 3,
+    "top_categories": {
+      "Complete": 42786,
+      "Pending": 14255,
+      "Missing": 14101
+    }
+  },
+  "next_3m_delinquency_flag": {
+    "dtype": "int64",
+    "null_count": 0,
+    "null_pct": 0.0,
+    "unique_count": 2,
+    "mean": 0.08605324562143318,
+    "std": 0.2804446292291471,
+    "min": 0.0,
+    "max": 1.0,
+    "median": 0.0
+  },
+  "next_6m_delinquency_flag": {
+    "dtype": "int64",
+    "null_count": 0,
+    "null_pct": 0.0,
+    "unique_count": 2,
+    "mean": 0.1532146973658317,
+    "std": 0.3601968594789593,
+    "min": 0.0,
+    "max": 1.0,
+    "median": 0.0
+  },
+  "next_12m_default_flag": {
+    "dtype": "int64",
+    "null_count": 0,
+    "null_pct": 0.0,
+    "unique_count": 2,
+    "mean": 0.022996260999128503,
+    "std": 0.1498924574310646,
+    "min": 0.0,
+    "max": 1.0,
+    "median": 0.0
+  },
+  "next_12m_prepayment_flag": {
+    "dtype": "int64",
+    "null_count": 0,
+    "null_pct": 0.0,
+    "unique_count": 2,
+    "mean": 0.013325461752551235,
+    "std": 0.11466507156152445,
+    "min": 0.0,
+    "max": 1.0,
+    "median": 0.0
+  },
+  "next_state": {
+    "dtype": "object",
+    "null_count": 0,
+    "null_pct": 0.0,
+    "unique_count": 4,
+    "top_categories": {
+      "Current": 67580,
+      "Delinquent": 2270,
+      "Default": 818,
+      "Prepaid": 474
+    }
+  },
+  "exception_required": {
+    "dtype": "Int64",
+    "null_count": 0,
+    "null_pct": 0.0,
+    "unique_count": 2,
+    "mean": 0.22539428185881757,
+    "std": 0.4178446526263375,
+    "min": 0.0,
+    "max": 1.0,
+    "median": 0.0
+  },
+  "exception_type": {
+    "dtype": "object",
+    "null_count": 55107,
+    "null_pct": 0.7746057181411824,
+    "unique_count": 3,
+    "top_categories": {
+      "Documentation Gap": 13910,
+      "Loan Modification": 1079,
+      "Severe Delinquency": 1046
+    }
+  }
+}

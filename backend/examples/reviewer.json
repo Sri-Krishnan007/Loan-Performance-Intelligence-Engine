@@ -1,0 +1,11 @@
+{
+  "loan_id": "LN100234",
+  "summary": "This loan has reconciliation conflicts...",
+  "recommendation": "Priority Review recommended due to...",
+  "action": "Priority Review",
+  "confidence": 0.82,
+  "disclaimer": "Recommendation — Not a Decision",
+  "model": "qwen/qwen3.8-27b",
+  "timestamp": "2026-08-26T20:30:00",
+  "evidence": ["Balance conflict: Primary=1366653.97, Servicer=1444691.13"]
+}

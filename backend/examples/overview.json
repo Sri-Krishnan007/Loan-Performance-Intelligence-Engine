@@ -1,0 +1,27 @@
+{
+  "total_loans": 2000,
+  "high_risk_loans": 187,
+  "anomalies": 64,
+  "default_rate": 0.0241,
+  "delinquency_rate": 0.0642,
+  "prepayment_rate": 0.0873,
+  "risk_distribution": [
+    {"level": "low", "count": 1780},
+    {"level": "medium", "count": 100},
+    {"level": "high", "count": 120}
+  ],
+  "status_distribution": [
+    {"status": "Current", "count": 1812},
+    {"status": "Delinquent", "count": 114},
+    {"status": "Default", "count": 48},
+    {"status": "Prepaid", "count": 26}
+  ],
+  "monthly_trends": [
+    {
+      "reporting_month": "2026-07-01",
+      "delinquency_rate": 0.0871,
+      "default_rate": 0.0223,
+      "prepayment_rate": 0.0169
+    }
+  ]
+}

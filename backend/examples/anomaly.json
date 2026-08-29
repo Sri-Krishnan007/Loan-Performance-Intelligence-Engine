@@ -1,0 +1,9 @@
+{
+  "loan_id": "LN101264",
+  "anomaly_score": 0.87,
+  "exception_required": true,
+  "exception_type": "Data Reconciliation Discrepancy",
+  "severity": "HIGH",
+  "drivers": ["balance_conflict", "dpd_conflict", "missing_document"],
+  "evidence": ["Balance conflict: Primary=1366653.97, Servicer=1444691.13, DPD conflict: Primary=0, Servicer=30.0, Document status is Missing in primary database."]
+}

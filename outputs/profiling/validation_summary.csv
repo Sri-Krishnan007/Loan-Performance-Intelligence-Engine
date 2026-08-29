@@ -1,0 +1,77 @@
+rule_id,name,description,severity,dataset,failures,status
+FIN001,Original Balance Positive,The original loan balance at origination must be strictly greater than zero.,error,loan_static_attributes,0,PASS
+FIN005,Interest Rate Bounds,Annual interest rate at origination must fall within a realistic mortgage rate boundary.,error,loan_static_attributes,0,PASS
+CAT001,Allowed Credit Score Bands,Credit score band must match underwriting guidelines.,error,loan_static_attributes,0,PASS
+CAT002,Allowed LTV Bands,Origination Loan-to-Value band must match underwriting guidelines.,error,loan_static_attributes,0,PASS
+CAT003,Allowed DTI Bands,Origination Debt-to-Income band must match underwriting guidelines.,error,loan_static_attributes,0,PASS
+CAT004,Allowed Loan Purposes,Loan purpose must match valid categories.,error,loan_static_attributes,0,PASS
+CAT005,Allowed Occupancy Types,Property occupancy type must match valid categories.,error,loan_static_attributes,0,PASS
+CAT006,Allowed Property Types,Property architecture type must match valid categories.,error,loan_static_attributes,0,PASS
+DUP001,Unique Loan Origination Records,Each loan_id must appear exactly once in the loan static attributes database.,error,loan_static_attributes,0,PASS
+FIN002,Current Balance Non-Negative,The outstanding principal balance in any performance month must be non-negative.,error,loan_monthly_performance_train,0,PASS
+FIN003,Current Balance Bounds,The outstanding principal balance must not exceed the origination balance.,error,loan_monthly_performance_train,0,PASS
+FIN004,Original Balance Constant,Original balance of a loan must remain constant across all of its monthly historical records.,error,loan_monthly_performance_train,0,PASS
+TMP001,Reporting Date Sequence,The reporting month must be greater than or equal to the loan origination month.,error,loan_monthly_performance_train,0,PASS
+TMP002,Loan Age Non-Negative,Elapsed months since origination (loan age) cannot be negative.,error,loan_monthly_performance_train,0,PASS
+TMP003,Remaining Term Non-Negative,Remaining scheduled amortization term in months cannot be negative.,error,loan_monthly_performance_train,0,PASS
+TMP004,Month Index Sequence,Month index must start at 0 at origination and increase sequentially by 1 for each reporting period.,error,loan_monthly_performance_train,0,PASS
+TMP005,Chronological Reporting Months,Reporting month must increase chronologically without gaps or regressions within each loan history.,error,loan_monthly_performance_train,0,PASS
+TMP006,Reporting Date Max Limit,Reporting month must not be later than the configured maximum reporting date.,error,loan_monthly_performance_train,0,PASS
+DLQ001,Allowed DPD Buckets,Days Past Due (DPD) must match defined industry reporting buckets.,error,loan_monthly_performance_train,0,PASS
+DLQ002,Current Status DPD Check,A status of 'Current' must correspond to exactly zero days past due.,error,loan_monthly_performance_train,0,PASS
+DLQ003,Delinquent Status DPD Check,A status of 'Delinquent' must correspond to greater than zero days past due.,error,loan_monthly_performance_train,0,PASS
+DLQ004,Default Status DPD Check,A status of 'Default' must correspond to the maximum delinquency bucket of 90 DPD.,error,loan_monthly_performance_train,0,PASS
+DLQ005,Prepaid Status DPD Check,A prepaid loan must have zero days past due.,error,loan_monthly_performance_train,0,PASS
+DLQ006,Logical Delinquency Progression,"Delinquency transitions should roll sequentially (e.g., 0 to 30, 30 to 60, 60 to 90). Skipped DPD buckets raise warnings.",warning,loan_monthly_performance_train,784,WARNING
+LFC001,Terminal Prepaid Status Check,Prepaid status is terminal; no monthly observations can occur after a loan is prepaid.,error,loan_monthly_performance_train,0,PASS
+LFC002,Terminal Default Status Check,Default status is terminal; no monthly observations can occur after a loan defaults.,error,loan_monthly_performance_train,0,PASS
+LFC003,Prepayment Flag Consistency,"If prepayment_flag is set to 1, the loan's current_status must be Prepaid.",error,loan_monthly_performance_train,0,PASS
+LFC004,Default Flag Consistency,"If default_flag is set to 1, the loan's current_status must be Default.",error,loan_monthly_performance_train,0,PASS
+LFC005,Prepaid Balance Validation,A prepaid loan must have a balance close to zero.,error,loan_monthly_performance_train,467,FAIL
+LFC006,Default Loss Severity Check,"A default record must be associated with a valid loss severity band (Low, Medium, High).",error,loan_monthly_performance_train,0,PASS
+LFC007,Non-Default Loss Severity Check,Active or prepaid loans must have loss_severity_band set to None.,error,loan_monthly_performance_train,0,PASS
+FLG001,Modification Flag Binary,Modification flag must be either 0 or 1.,error,loan_monthly_performance_train,0,PASS
+FLG002,Prepayment Flag Binary,Prepayment flag must be either 0 or 1.,error,loan_monthly_performance_train,0,PASS
+FLG003,Default Flag Binary,Default flag must be either 0 or 1.,error,loan_monthly_performance_train,0,PASS
+FLG004,Modification Delinquency Requirement,Loan modifications normally occur for delinquent accounts (DPD >= 60). Modifications on current/mildly delinquent loans trigger a warning.,warning,loan_monthly_performance_train,1385,WARNING
+DOC001,Allowed Document Statuses,"Document status must be Complete, Pending, or Missing.",error,loan_monthly_performance_train,0,PASS
+DOC002,Missing Document Exception Trigger,"If the document status is Missing, an exception must be required.",error,loan_monthly_performance_train,0,PASS
+DOC003,Missing Document Exception Classification,"If the document status is Missing, exception_type must indicate Documentation Gap.",error,loan_monthly_performance_train,191,FAIL
+CAT007,Allowed Source Systems,Supplying database system must be a registered source.,error,loan_monthly_performance_train,0,PASS
+DUP002,Unique Monthly Loan Observations,The combination of loan_id and reporting_month must be unique across all performance panel records.,error,loan_monthly_performance_train,0,PASS
+FIN002,Current Balance Non-Negative,The outstanding principal balance in any performance month must be non-negative.,error,loan_monthly_performance_test,0,PASS
+FIN003,Current Balance Bounds,The outstanding principal balance must not exceed the origination balance.,error,loan_monthly_performance_test,0,PASS
+FIN004,Original Balance Constant,Original balance of a loan must remain constant across all of its monthly historical records.,error,loan_monthly_performance_test,0,PASS
+TMP001,Reporting Date Sequence,The reporting month must be greater than or equal to the loan origination month.,error,loan_monthly_performance_test,0,PASS
+TMP002,Loan Age Non-Negative,Elapsed months since origination (loan age) cannot be negative.,error,loan_monthly_performance_test,0,PASS
+TMP003,Remaining Term Non-Negative,Remaining scheduled amortization term in months cannot be negative.,error,loan_monthly_performance_test,0,PASS
+TMP004,Month Index Sequence,Month index must start at 0 at origination and increase sequentially by 1 for each reporting period.,error,loan_monthly_performance_test,0,PASS
+TMP005,Chronological Reporting Months,Reporting month must increase chronologically without gaps or regressions within each loan history.,error,loan_monthly_performance_test,0,PASS
+TMP006,Reporting Date Max Limit,Reporting month must not be later than the configured maximum reporting date.,error,loan_monthly_performance_test,0,PASS
+DLQ001,Allowed DPD Buckets,Days Past Due (DPD) must match defined industry reporting buckets.,error,loan_monthly_performance_test,0,PASS
+DLQ002,Current Status DPD Check,A status of 'Current' must correspond to exactly zero days past due.,error,loan_monthly_performance_test,0,PASS
+DLQ003,Delinquent Status DPD Check,A status of 'Delinquent' must correspond to greater than zero days past due.,error,loan_monthly_performance_test,0,PASS
+DLQ004,Default Status DPD Check,A status of 'Default' must correspond to the maximum delinquency bucket of 90 DPD.,error,loan_monthly_performance_test,0,PASS
+DLQ005,Prepaid Status DPD Check,A prepaid loan must have zero days past due.,error,loan_monthly_performance_test,0,PASS
+DLQ006,Logical Delinquency Progression,"Delinquency transitions should roll sequentially (e.g., 0 to 30, 30 to 60, 60 to 90). Skipped DPD buckets raise warnings.",warning,loan_monthly_performance_test,738,WARNING
+LFC001,Terminal Prepaid Status Check,Prepaid status is terminal; no monthly observations can occur after a loan is prepaid.,error,loan_monthly_performance_test,0,PASS
+LFC002,Terminal Default Status Check,Default status is terminal; no monthly observations can occur after a loan defaults.,error,loan_monthly_performance_test,0,PASS
+LFC003,Prepayment Flag Consistency,"If prepayment_flag is set to 1, the loan's current_status must be Prepaid.",error,loan_monthly_performance_test,0,PASS
+LFC005,Prepaid Balance Validation,A prepaid loan must have a balance close to zero.,error,loan_monthly_performance_test,454,FAIL
+LFC006,Default Loss Severity Check,"A default record must be associated with a valid loss severity band (Low, Medium, High).",error,loan_monthly_performance_test,0,PASS
+LFC007,Non-Default Loss Severity Check,Active or prepaid loans must have loss_severity_band set to None.,error,loan_monthly_performance_test,0,PASS
+FLG001,Modification Flag Binary,Modification flag must be either 0 or 1.,error,loan_monthly_performance_test,0,PASS
+FLG002,Prepayment Flag Binary,Prepayment flag must be either 0 or 1.,error,loan_monthly_performance_test,0,PASS
+FLG004,Modification Delinquency Requirement,Loan modifications normally occur for delinquent accounts (DPD >= 60). Modifications on current/mildly delinquent loans trigger a warning.,warning,loan_monthly_performance_test,1337,WARNING
+DOC001,Allowed Document Statuses,"Document status must be Complete, Pending, or Missing.",error,loan_monthly_performance_test,0,PASS
+CAT007,Allowed Source Systems,Supplying database system must be a registered source.,error,loan_monthly_performance_test,0,PASS
+DUP002,Unique Monthly Loan Observations,The combination of loan_id and reporting_month must be unique across all performance panel records.,error,loan_monthly_performance_test,0,PASS
+SRV001,Servicer Update Source ID Unique,Each update record in the servicer feed must have a unique identifier.,error,servicer_updates,0,PASS
+SRV002,Servicer Timestamp Order,Servicer local system modification timestamp must be older than feed receipt timestamp.,error,servicer_updates,0,PASS
+SRV003,Servicer Receipt Date Bounds,The servicer updates feed cannot be received before the close of the reporting month.,error,servicer_updates,0,PASS
+SRV004,Servicer Balance Non-Negative,Servicer reported outstanding balance cannot be negative.,error,servicer_updates,0,PASS
+SRV005,Servicer DPD Allowed Values,Servicer reported days past due must be in valid delinquency buckets.,error,servicer_updates,0,PASS
+SRV006,Servicer Status Allowed Values,"Servicer reported credit status must be Current, Delinquent, Default, or Prepaid.",error,servicer_updates,0,PASS
+SRV007,Expected Partial Update Null Fields,"Updates marked as PARTIAL_UPDATE are expected to contain missing fields; this should be flagged as informational, not a data error.",info,servicer_updates,1653,FAIL
+SRV008,Expected Stale Record Lag,Updates marked as STALE represent unprocessed local system updates. Timestamp lag is expected.,info,servicer_updates,1290,FAIL
+SRV009,Expected Conflict Mismatches,Updates marked as CONFLICT represent feed errors or mismatch flags for reconciliation testing.,info,servicer_updates,942,FAIL

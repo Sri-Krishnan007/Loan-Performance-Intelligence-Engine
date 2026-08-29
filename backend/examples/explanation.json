@@ -1,0 +1,15 @@
+{
+  "loan_id": "LN100234",
+  "global_features": [
+    {"feature": "days_past_due", "importance": 0.0184},
+    {"feature": "month_index", "importance": 0.0},
+    {"feature": "remaining_term_months", "importance": 0.0}
+  ],
+  "local_drivers": {
+    "positive": ["high_dti_ratio"],
+    "negative": ["high_credit_score"]
+  },
+  "confidence": 0.84,
+  "false_positive_context": "Prediction false alarms occur mostly when servicer balance updates conflict with primary records.",
+  "false_negative_context": "Target omissions are mitigated by checking cumulative modification counts."
+}

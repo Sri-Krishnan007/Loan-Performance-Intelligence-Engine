@@ -1,0 +1,198 @@
+{
+  "delinquency_3m": {
+    "raw": {
+      "roc_auc": 0.8808885974677623,
+      "pr_auc": 0.7832361480399571,
+      "brier_score": 0.057114447613211675,
+      "f1_score": 0.8204029147021002,
+      "precision": 0.9755351681957186,
+      "recall": 0.7078402366863905,
+      "recall_at_90_precision": 0.7100591715976331,
+      "confusion_matrix": {
+        "tn": 14646,
+        "fp": 24,
+        "fn": 395,
+        "tp": 957
+      }
+    },
+    "calibrated": {
+      "roc_auc": 0.883641014548872,
+      "pr_auc": 0.7887849549247857,
+      "brier_score": 0.024005130330994655,
+      "f1_score": 0.8279150411790204,
+      "precision": 1.0,
+      "recall": 0.7063609467455622,
+      "recall_at_90_precision": 0.7078402366863905,
+      "confusion_matrix": {
+        "tn": 14670,
+        "fp": 0,
+        "fn": 397,
+        "tp": 955
+      }
+    }
+  },
+  "delinquency_6m": {
+    "raw": {
+      "roc_auc": 0.8073673995662718,
+      "pr_auc": 0.7049874322275121,
+      "brier_score": 0.11812507904258092,
+      "f1_score": 0.6522717049032839,
+      "precision": 0.7367886178861789,
+      "recall": 0.5851493139628733,
+      "recall_at_90_precision": 0.5597255851493139,
+      "confusion_matrix": {
+        "tn": 13026,
+        "fp": 518,
+        "fn": 1028,
+        "tp": 1450
+      }
+    },
+    "calibrated": {
+      "roc_auc": 0.812185090580928,
+      "pr_auc": 0.7143706056384882,
+      "brier_score": 0.06399568953488416,
+      "f1_score": 0.7073552425665102,
+      "precision": 1.0,
+      "recall": 0.5472154963680388,
+      "recall_at_90_precision": 0.5500403551251009,
+      "confusion_matrix": {
+        "tn": 13544,
+        "fp": 0,
+        "fn": 1122,
+        "tp": 1356
+      }
+    }
+  },
+  "default_12m": {
+    "raw": {
+      "roc_auc": 0.8019919158259735,
+      "pr_auc": 0.5700466642096411,
+      "brier_score": 0.09476155981266375,
+      "f1_score": 0.45670995670995673,
+      "precision": 0.39219330855018586,
+      "recall": 0.5466321243523317,
+      "recall_at_90_precision": 0.5284974093264249,
+      "confusion_matrix": {
+        "tn": 15309,
+        "fp": 327,
+        "fn": 175,
+        "tp": 211
+      }
+    },
+    "calibrated": {
+      "roc_auc": 0.8090102288196364,
+      "pr_auc": 0.599081410349707,
+      "brier_score": 0.011350696362483098,
+      "f1_score": 0.6869712351945855,
+      "precision": 0.9902439024390244,
+      "recall": 0.5259067357512953,
+      "recall_at_90_precision": 0.5284974093264249,
+      "confusion_matrix": {
+        "tn": 15634,
+        "fp": 2,
+        "fn": 183,
+        "tp": 203
+      }
+    }
+  },
+  "prepayment_12m": {
+    "raw": {
+      "roc_auc": 0.7627272408963586,
+      "pr_auc": 0.5325848775060643,
+      "brier_score": 0.10727883590012226,
+      "f1_score": 0.37771739130434784,
+      "precision": 0.2995689655172414,
+      "recall": 0.5110294117647058,
+      "recall_at_90_precision": 0.5073529411764706,
+      "confusion_matrix": {
+        "tn": 15425,
+        "fp": 325,
+        "fn": 133,
+        "tp": 139
+      }
+    },
+    "calibrated": {
+      "roc_auc": 0.7790905695611577,
+      "pr_auc": 0.5522551280438434,
+      "brier_score": 0.008336642431729269,
+      "f1_score": 0.6699266503667481,
+      "precision": 1.0,
+      "recall": 0.5036764705882353,
+      "recall_at_90_precision": 0.5073529411764706,
+      "confusion_matrix": {
+        "tn": 15750,
+        "fp": 0,
+        "fn": 135,
+        "tp": 137
+      }
+    }
+  },
+  "next_state": {
+    "macro_f1": 0.1676433977761582,
+    "confusion_matrix": {
+      "Current": {
+        "Current": 5474,
+        "Default": 3166,
+        "Delinquent": 2390,
+        "Prepaid": 4185
+      },
+      "Default": {
+        "Current": 45,
+        "Default": 62,
+        "Delinquent": 47,
+        "Prepaid": 32
+      },
+      "Delinquent": {
+        "Current": 139,
+        "Default": 116,
+        "Delinquent": 144,
+        "Prepaid": 90
+      },
+      "Prepaid": {
+        "Current": 56,
+        "Default": 17,
+        "Delinquent": 16,
+        "Prepaid": 43
+      }
+    },
+    "classification_report": {
+      "Current": {
+        "precision": 0.9579978998949947,
+        "recall": 0.35977653631284917,
+        "f1-score": 0.5231019160017201,
+        "support": 15215.0
+      },
+      "Default": {
+        "precision": 0.018446890806307646,
+        "recall": 0.3333333333333333,
+        "f1-score": 0.03495912038342261,
+        "support": 186.0
+      },
+      "Delinquent": {
+        "precision": 0.055448594532152486,
+        "recall": 0.294478527607362,
+        "f1-score": 0.09332469215813351,
+        "support": 489.0
+      },
+      "Prepaid": {
+        "precision": 0.009885057471264367,
+        "recall": 0.32575757575757575,
+        "f1-score": 0.019187862561356538,
+        "support": 132.0
+      },
+      "accuracy": 0.3571963550118587,
+      "macro avg": {
+        "precision": 0.2604446106761798,
+        "recall": 0.32833649325278,
+        "f1-score": 0.1676433977761582,
+        "support": 16022.0
+      },
+      "weighted avg": {
+        "precision": 0.9117331393649201,
+        "recall": 0.3571963550118587,
+        "f1-score": 0.5001664349445084,
+        "support": 16022.0
+      }
+    }
+  }
+}

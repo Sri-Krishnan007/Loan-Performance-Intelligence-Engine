@@ -1,0 +1,9 @@
+{
+  "dataset": "loan_monthly_performance_train",
+  "total_records": 71142,
+  "average_quality_score": 99.66257625593883,
+  "median_quality_score": 100.0,
+  "records_above_90_pct": 99.0750892581035,
+  "records_70_89_pct": 0.9249107418964887,
+  "records_below_70_pct": 0.0
+}

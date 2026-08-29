@@ -1,0 +1,21 @@
+{
+  "loan_id": "LN100234",
+  "original_balance": 350000.00,
+  "interest_rate": 4.5,
+  "vintage": 2022,
+  "credit_score_band": "660-699",
+  "ltv_band": "80-90",
+  "dti_band": "30-40",
+  "state": "CA",
+  "loan_purpose": "Purchase",
+  "occupancy_type": "Primary Residence",
+  "property_type": "Single Family",
+  "servicer_name": "Servicer A",
+  "current_status": "Current",
+  "current_balance": 341000.00,
+  "days_past_due": 0,
+  "loan_age_months": 24,
+  "remaining_term_months": 336,
+  "reporting_month": "2026-07-01",
+  "modification_flag": 0
+}

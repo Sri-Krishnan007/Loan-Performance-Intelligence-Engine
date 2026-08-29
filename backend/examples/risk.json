@@ -1,0 +1,15 @@
+{
+  "loan_id": "LN100234",
+  "delinquency_probability": 0.033,
+  "default_probability": 0.015,
+  "prepayment_probability": 0.007,
+  "next_state": "CURRENT",
+  "confidence": 0.84,
+  "model_versions": {
+    "delinquency_3m": "v1.0",
+    "delinquency_6m": "v1.0",
+    "default_12m": "v1.0",
+    "prepayment_12m": "v1.0",
+    "next_state": "v1.0"
+  }
+}

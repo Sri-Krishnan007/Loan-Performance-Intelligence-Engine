@@ -1,0 +1,182 @@
+[
+  {
+    "loan_id": "LN101264",
+    "reporting_month": "2024-06-01",
+    "anomaly_score": 0.8738753261834433,
+    "anomaly_type": "Data Reconciliation Discrepancy",
+    "top_drivers": "balance_conflict;dpd_conflict;missing_document",
+    "evidence": "Balance conflict: Primary=1366653.97, Servicer=1444691.13, DPD conflict: Primary=0, Servicer=30.0, Document status is Missing in primary database.",
+    "recommended_action": "Priority Review"
+  },
+  {
+    "loan_id": "LN101337",
+    "reporting_month": "2020-11-01",
+    "anomaly_score": 0.7850908463656812,
+    "anomaly_type": "Data Reconciliation Discrepancy",
+    "top_drivers": "balance_conflict;dpd_conflict",
+    "evidence": "Balance conflict: Primary=818199.48, Servicer=833529.24, DPD conflict: Primary=60, Servicer=30.0",
+    "recommended_action": "Priority Review"
+  },
+  {
+    "loan_id": "LN100166",
+    "reporting_month": "2022-05-01",
+    "anomaly_score": 0.7617579554167737,
+    "anomaly_type": "Data Reconciliation Discrepancy",
+    "top_drivers": "balance_conflict;dpd_conflict;missing_document",
+    "evidence": "Balance conflict: Primary=239597.89, Servicer=242528.77, DPD conflict: Primary=90, Servicer=30.0, Document status is Missing in primary database.",
+    "recommended_action": "Priority Review"
+  },
+  {
+    "loan_id": "LN101165",
+    "reporting_month": "2023-07-01",
+    "anomaly_score": 0.7611217651396324,
+    "anomaly_type": "Data Reconciliation Discrepancy",
+    "top_drivers": "balance_conflict;dpd_conflict",
+    "evidence": "Balance conflict: Primary=952289.84, Servicer=993724.89, DPD conflict: Primary=0, Servicer=60.0",
+    "recommended_action": "Priority Review"
+  },
+  {
+    "loan_id": "LN101512",
+    "reporting_month": "2024-02-01",
+    "anomaly_score": 0.7546048221689579,
+    "anomaly_type": "Data Reconciliation Discrepancy",
+    "top_drivers": "balance_conflict;dpd_conflict",
+    "evidence": "Balance conflict: Primary=563724.69, Servicer=593077.72, DPD conflict: Primary=90, Servicer=30.0",
+    "recommended_action": "Priority Review"
+  },
+  {
+    "loan_id": "LN101009",
+    "reporting_month": "2022-05-01",
+    "anomaly_score": 0.7396788153045573,
+    "anomaly_type": "Data Reconciliation Discrepancy",
+    "top_drivers": "balance_conflict;dpd_conflict",
+    "evidence": "Balance conflict: Primary=119438.74, Servicer=125781.54, DPD conflict: Primary=90, Servicer=30.0",
+    "recommended_action": "Priority Review"
+  },
+  {
+    "loan_id": "LN101445",
+    "reporting_month": "2019-08-01",
+    "anomaly_score": 0.736325660252918,
+    "anomaly_type": "Data Reconciliation Discrepancy",
+    "top_drivers": "balance_conflict;dpd_conflict",
+    "evidence": "Balance conflict: Primary=1111590.71, Servicer=1177084.15, DPD conflict: Primary=0, Servicer=30.0",
+    "recommended_action": "Priority Review"
+  },
+  {
+    "loan_id": "LN100542",
+    "reporting_month": "2026-02-01",
+    "anomaly_score": 0.7270483557377919,
+    "anomaly_type": "Data Reconciliation Discrepancy",
+    "top_drivers": "balance_conflict;dpd_conflict",
+    "evidence": "Balance conflict: Primary=312772.18, Servicer=318233.02, DPD conflict: Primary=90, Servicer=30.0",
+    "recommended_action": "Priority Review"
+  },
+  {
+    "loan_id": "LN101753",
+    "reporting_month": "2021-09-01",
+    "anomaly_score": 0.7230698463734002,
+    "anomaly_type": "Data Reconciliation Discrepancy",
+    "top_drivers": "balance_conflict;dpd_conflict",
+    "evidence": "Balance conflict: Primary=91070.25, Servicer=96027.61, DPD conflict: Primary=90, Servicer=0.0",
+    "recommended_action": "Priority Review"
+  },
+  {
+    "loan_id": "LN101209",
+    "reporting_month": "2025-02-01",
+    "anomaly_score": 0.7194362864914399,
+    "anomaly_type": "Data Reconciliation Discrepancy",
+    "top_drivers": "balance_conflict;dpd_conflict;missing_document",
+    "evidence": "Balance conflict: Primary=231626.39, Servicer=249861.00, DPD conflict: Primary=60, Servicer=0.0, Document status is Missing in primary database.",
+    "recommended_action": "Priority Review"
+  },
+  {
+    "loan_id": "LN101689",
+    "reporting_month": "2026-06-01",
+    "anomaly_score": 0.7191466256703551,
+    "anomaly_type": "Data Reconciliation Discrepancy",
+    "top_drivers": "balance_conflict;dpd_conflict",
+    "evidence": "Balance conflict: Primary=71901.31, Servicer=77406.23, DPD conflict: Primary=30, Servicer=0.0",
+    "recommended_action": "Priority Review"
+  },
+  {
+    "loan_id": "LN101252",
+    "reporting_month": "2020-05-01",
+    "anomaly_score": 0.7187343469970111,
+    "anomaly_type": "Data Reconciliation Discrepancy",
+    "top_drivers": "balance_conflict;dpd_conflict",
+    "evidence": "Balance conflict: Primary=948460.99, Servicer=976602.57, DPD conflict: Primary=0, Servicer=30.0",
+    "recommended_action": "Priority Review"
+  },
+  {
+    "loan_id": "LN101165",
+    "reporting_month": "2026-05-01",
+    "anomaly_score": 0.7170255356578296,
+    "anomaly_type": "Data Reconciliation Discrepancy",
+    "top_drivers": "balance_conflict;missing_document",
+    "evidence": "Balance conflict: Primary=864880.00, Servicer=918861.01, Document status is Missing in primary database.",
+    "recommended_action": "Priority Review"
+  },
+  {
+    "loan_id": "LN101097",
+    "reporting_month": "2024-11-01",
+    "anomaly_score": 0.7142329958544185,
+    "anomaly_type": "Data Reconciliation Discrepancy",
+    "top_drivers": "balance_conflict;dpd_conflict",
+    "evidence": "Balance conflict: Primary=202626.19, Servicer=218476.94, DPD conflict: Primary=90, Servicer=30.0",
+    "recommended_action": "Priority Review"
+  },
+  {
+    "loan_id": "LN101659",
+    "reporting_month": "2020-05-01",
+    "anomaly_score": 0.7035710818372376,
+    "anomaly_type": "Data Reconciliation Discrepancy",
+    "top_drivers": "balance_conflict;dpd_conflict",
+    "evidence": "Balance conflict: Primary=231957.52, Servicer=248469.30, DPD conflict: Primary=90, Servicer=60.0",
+    "recommended_action": "Priority Review"
+  },
+  {
+    "loan_id": "LN100054",
+    "reporting_month": "2024-11-01",
+    "anomaly_score": 0.697397808012748,
+    "anomaly_type": "Data Reconciliation Discrepancy",
+    "top_drivers": "balance_conflict;dpd_conflict",
+    "evidence": "Balance conflict: Primary=204373.63, Servicer=212695.99, DPD conflict: Primary=90, Servicer=60.0",
+    "recommended_action": "Investigate Data"
+  },
+  {
+    "loan_id": "LN101570",
+    "reporting_month": "2019-12-01",
+    "anomaly_score": 0.6882123007711917,
+    "anomaly_type": "Data Reconciliation Discrepancy",
+    "top_drivers": "balance_conflict;dpd_conflict",
+    "evidence": "Balance conflict: Primary=322827.63, Servicer=333781.31, DPD conflict: Primary=90, Servicer=0.0",
+    "recommended_action": "Investigate Data"
+  },
+  {
+    "loan_id": "LN101894",
+    "reporting_month": "2019-06-01",
+    "anomaly_score": 0.687942811635309,
+    "anomaly_type": "Data Reconciliation Discrepancy",
+    "top_drivers": "balance_conflict;dpd_conflict",
+    "evidence": "Balance conflict: Primary=873758.04, Servicer=937429.88, DPD conflict: Primary=0, Servicer=60.0",
+    "recommended_action": "Investigate Data"
+  },
+  {
+    "loan_id": "LN100136",
+    "reporting_month": "2023-10-01",
+    "anomaly_score": 0.6836662769387256,
+    "anomaly_type": "Data Reconciliation Discrepancy",
+    "top_drivers": "balance_conflict;dpd_conflict",
+    "evidence": "Balance conflict: Primary=313674.40, Servicer=322751.12, DPD conflict: Primary=90, Servicer=60.0",
+    "recommended_action": "Investigate Data"
+  },
+  {
+    "loan_id": "LN101622",
+    "reporting_month": "2026-01-01",
+    "anomaly_score": 0.6732962418556648,
+    "anomaly_type": "Data Reconciliation Discrepancy",
+    "top_drivers": "balance_conflict;dpd_conflict",
+    "evidence": "Balance conflict: Primary=743565.93, Servicer=760651.54, DPD conflict: Primary=0, Servicer=60.0",
+    "recommended_action": "Investigate Data"
+  }
+]

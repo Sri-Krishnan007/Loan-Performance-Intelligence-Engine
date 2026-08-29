@@ -1,0 +1,611 @@
+{
+  "metadata": {
+    "dataset": "Intain Loan Performance Intelligence Engine Synthetic Datasets",
+    "version": "1.0",
+    "description": "Business validation and data quality rules for mortgage loan static attributes, monthly performance panels, and servicer updates.",
+    "domain": "Mortgage Loan Performance & Risk Analytics"
+  },
+
+  "quality_scoring": {
+    "record_score_initial": 100,
+    "error_penalty": 20,
+    "warning_penalty": 5,
+    "info_penalty": 0,
+    "minimum_score": 0
+  },
+
+  "financial_rules": [
+    {
+      "rule_id": "FIN001",
+      "dataset": "loan_static_attributes",
+      "name": "Original Balance Positive",
+      "description": "The original loan balance at origination must be strictly greater than zero.",
+      "columns": ["original_balance"],
+      "type": "row_condition",
+      "condition": "original_balance > 0",
+      "severity": "error",
+      "message": "Original loan balance must be greater than zero."
+    },
+    {
+      "rule_id": "FIN002",
+      "dataset": "loan_monthly_performance",
+      "name": "Current Balance Non-Negative",
+      "description": "The outstanding principal balance in any performance month must be non-negative.",
+      "columns": ["current_balance"],
+      "type": "row_condition",
+      "condition": "current_balance >= 0",
+      "severity": "error",
+      "message": "Current loan balance cannot be negative."
+    },
+    {
+      "rule_id": "FIN003",
+      "dataset": "loan_monthly_performance",
+      "name": "Current Balance Bounds",
+      "description": "The outstanding principal balance must not exceed the origination balance.",
+      "columns": ["current_balance", "original_balance"],
+      "type": "row_condition",
+      "condition": "current_balance <= original_balance",
+      "severity": "error",
+      "message": "Current loan balance cannot exceed original loan balance."
+    },
+    {
+      "rule_id": "FIN004",
+      "dataset": "loan_monthly_performance",
+      "name": "Original Balance Constant",
+      "description": "Original balance of a loan must remain constant across all of its monthly historical records.",
+      "columns": ["loan_id", "original_balance"],
+      "type": "group_consistency",
+      "condition": {
+        "group_by": "loan_id",
+        "target": "original_balance",
+        "metric": "nunique",
+        "expected": 1
+      },
+      "severity": "error",
+      "message": "Original loan balance has changed over time for a single loan."
+    },
+    {
+      "rule_id": "FIN005",
+      "dataset": "loan_static_attributes",
+      "name": "Interest Rate Bounds",
+      "description": "Annual interest rate at origination must fall within a realistic mortgage rate boundary.",
+      "columns": ["interest_rate"],
+      "type": "row_condition",
+      "condition": "interest_rate >= 2.0 and interest_rate <= 11.0",
+      "severity": "error",
+      "message": "Interest rate is outside realistic mortgage industry bounds (2.0% - 11.0%)."
+    }
+  ],
+
+  "temporal_rules": [
+    {
+      "rule_id": "TMP001",
+      "dataset": "loan_monthly_performance",
+      "name": "Reporting Date Sequence",
+      "description": "The reporting month must be greater than or equal to the loan origination month.",
+      "columns": ["reporting_month", "origination_month"],
+      "type": "row_condition",
+      "condition": "reporting_month >= origination_month",
+      "severity": "error",
+      "message": "Reporting month cannot occur before the loan's origination month."
+    },
+    {
+      "rule_id": "TMP002",
+      "dataset": "loan_monthly_performance",
+      "name": "Loan Age Non-Negative",
+      "description": "Elapsed months since origination (loan age) cannot be negative.",
+      "columns": ["loan_age_months"],
+      "type": "row_condition",
+      "condition": "loan_age_months >= 0",
+      "severity": "error",
+      "message": "Loan age months cannot be negative."
+    },
+    {
+      "rule_id": "TMP003",
+      "dataset": "loan_monthly_performance",
+      "name": "Remaining Term Non-Negative",
+      "description": "Remaining scheduled amortization term in months cannot be negative.",
+      "columns": ["remaining_term_months"],
+      "type": "row_condition",
+      "condition": "remaining_term_months >= 0",
+      "severity": "error",
+      "message": "Remaining term months cannot be negative."
+    },
+    {
+      "rule_id": "TMP004",
+      "dataset": "loan_monthly_performance",
+      "name": "Month Index Sequence",
+      "description": "Month index must start at 0 at origination and increase sequentially by 1 for each reporting period.",
+      "columns": ["loan_id", "month_index"],
+      "type": "sequential_group",
+      "condition": {
+        "group_by": "loan_id",
+        "target": "month_index",
+        "start": 0,
+        "step": 1
+      },
+      "severity": "error",
+      "message": "Month index sequence is broken or does not start at 0."
+    },
+    {
+      "rule_id": "TMP005",
+      "dataset": "loan_monthly_performance",
+      "name": "Chronological Reporting Months",
+      "description": "Reporting month must increase chronologically without gaps or regressions within each loan history.",
+      "columns": ["loan_id", "reporting_month"],
+      "type": "chronological_group",
+      "condition": {
+        "group_by": "loan_id",
+        "target": "reporting_month",
+        "frequency": "MS"
+      },
+      "severity": "error",
+      "message": "Reporting months are not sorted chronologically or have gaps."
+    },
+    {
+      "rule_id": "TMP006",
+      "dataset": "loan_monthly_performance",
+      "name": "Reporting Date Max Limit",
+      "description": "Reporting month must not be later than the configured maximum reporting date.",
+      "columns": ["reporting_month"],
+      "type": "row_condition",
+      "condition": "reporting_month <= '2026-07-01'",
+      "severity": "error",
+      "message": "Reporting month is later than the dataset's maximum configuration date (2026-07-01)."
+    }
+  ],
+
+  "delinquency_rules": [
+    {
+      "rule_id": "DLQ001",
+      "dataset": "loan_monthly_performance",
+      "name": "Allowed DPD Buckets",
+      "description": "Days Past Due (DPD) must match defined industry reporting buckets.",
+      "columns": ["days_past_due"],
+      "type": "allowed_values",
+      "condition": [0, 30, 60, 90],
+      "severity": "error",
+      "message": "Days past due value is invalid; must be 0, 30, 60, or 90."
+    },
+    {
+      "rule_id": "DLQ002",
+      "dataset": "loan_monthly_performance",
+      "name": "Current Status DPD Check",
+      "description": "A status of 'Current' must correspond to exactly zero days past due.",
+      "columns": ["current_status", "days_past_due"],
+      "type": "row_condition",
+      "condition": "not (current_status == 'Current' and days_past_due != 0)",
+      "severity": "error",
+      "message": "Loan marked as Current has a non-zero days past due value."
+    },
+    {
+      "rule_id": "DLQ003",
+      "dataset": "loan_monthly_performance",
+      "name": "Delinquent Status DPD Check",
+      "description": "A status of 'Delinquent' must correspond to greater than zero days past due.",
+      "columns": ["current_status", "days_past_due"],
+      "type": "row_condition",
+      "condition": "not (current_status == 'Delinquent' and days_past_due == 0)",
+      "severity": "error",
+      "message": "Loan marked as Delinquent has zero days past due."
+    },
+    {
+      "rule_id": "DLQ004",
+      "dataset": "loan_monthly_performance",
+      "name": "Default Status DPD Check",
+      "description": "A status of 'Default' must correspond to the maximum delinquency bucket of 90 DPD.",
+      "columns": ["current_status", "days_past_due"],
+      "type": "row_condition",
+      "condition": "not (current_status == 'Default' and days_past_due != 90)",
+      "severity": "error",
+      "message": "Loan marked as Default has a days past due value other than 90."
+    },
+    {
+      "rule_id": "DLQ005",
+      "dataset": "loan_monthly_performance",
+      "name": "Prepaid Status DPD Check",
+      "description": "A prepaid loan must have zero days past due.",
+      "columns": ["current_status", "days_past_due"],
+      "type": "row_condition",
+      "condition": "not (current_status == 'Prepaid' and days_past_due != 0)",
+      "severity": "error",
+      "message": "Loan marked as Prepaid has active delinquency (days past due > 0)."
+    },
+    {
+      "rule_id": "DLQ006",
+      "dataset": "loan_monthly_performance",
+      "name": "Logical Delinquency Progression",
+      "description": "Delinquency transitions should roll sequentially (e.g., 0 to 30, 30 to 60, 60 to 90). Skipped DPD buckets raise warnings.",
+      "columns": ["loan_id", "days_past_due"],
+      "type": "transition_validation",
+      "condition": {
+        "group_by": "loan_id",
+        "target": "days_past_due",
+        "permitted_rolls": {
+          "0": [0, 30],
+          "30": [0, 30, 60],
+          "60": [0, 30, 60, 90],
+          "90": [60, 90]
+        }
+      },
+      "severity": "warning",
+      "message": "Non-sequential delinquency transition detected (e.g., loan jumped from 0 to 60 DPD in one month)."
+    }
+  ],
+
+  "lifecycle_rules": [
+    {
+      "rule_id": "LFC001",
+      "dataset": "loan_monthly_performance",
+      "name": "Terminal Prepaid Status Check",
+      "description": "Prepaid status is terminal; no monthly observations can occur after a loan is prepaid.",
+      "columns": ["loan_id", "current_status"],
+      "type": "terminal_state",
+      "condition": "Prepaid",
+      "severity": "error",
+      "message": "Monthly record exists for a loan after it reached Prepaid status."
+    },
+    {
+      "rule_id": "LFC002",
+      "dataset": "loan_monthly_performance",
+      "name": "Terminal Default Status Check",
+      "description": "Default status is terminal; no monthly observations can occur after a loan defaults.",
+      "columns": ["loan_id", "current_status"],
+      "type": "terminal_state",
+      "condition": "Default",
+      "severity": "error",
+      "message": "Monthly record exists for a loan after it reached Default status."
+    },
+    {
+      "rule_id": "LFC003",
+      "dataset": "loan_monthly_performance",
+      "name": "Prepayment Flag Consistency",
+      "description": "If prepayment_flag is set to 1, the loan's current_status must be Prepaid.",
+      "columns": ["prepayment_flag", "current_status"],
+      "type": "row_condition",
+      "condition": "not (prepayment_flag == 1 and current_status != 'Prepaid')",
+      "severity": "error",
+      "message": "Prepayment flag is set to 1 but current status is not 'Prepaid'."
+    },
+    {
+      "rule_id": "LFC004",
+      "dataset": "loan_monthly_performance",
+      "name": "Default Flag Consistency",
+      "description": "If default_flag is set to 1, the loan's current_status must be Default.",
+      "columns": ["default_flag", "current_status"],
+      "type": "row_condition",
+      "condition": "not (default_flag == 1 and current_status != 'Default')",
+      "severity": "error",
+      "message": "Default flag is set to 1 but current status is not 'Default'."
+    },
+    {
+      "rule_id": "LFC005",
+      "dataset": "loan_monthly_performance",
+      "name": "Prepaid Balance Validation",
+      "description": "A prepaid loan must have a balance close to zero.",
+      "columns": ["current_status", "current_balance"],
+      "type": "row_condition",
+      "condition": "not (current_status == 'Prepaid' and current_balance >= 1000.00)",
+      "severity": "error",
+      "message": "Prepaid loan has a remaining balance exceeding standard residual limits."
+    },
+    {
+      "rule_id": "LFC006",
+      "dataset": "loan_monthly_performance",
+      "name": "Default Loss Severity Check",
+      "description": "A default record must be associated with a valid loss severity band (Low, Medium, High).",
+      "columns": ["current_status", "loss_severity_band"],
+      "type": "row_condition",
+      "condition": "not (current_status == 'Default' and loss_severity_band == 'None')",
+      "severity": "error",
+      "message": "Defaulted loan has no loss severity band assigned."
+    },
+    {
+      "rule_id": "LFC007",
+      "dataset": "loan_monthly_performance",
+      "name": "Non-Default Loss Severity Check",
+      "description": "Active or prepaid loans must have loss_severity_band set to None.",
+      "columns": ["current_status", "loss_severity_band"],
+      "type": "row_condition",
+      "condition": "not (current_status != 'Default' and loss_severity_band != 'None')",
+      "severity": "error",
+      "message": "Active or prepaid loan has a loss severity band assigned."
+    }
+  ],
+
+  "flag_consistency_rules": [
+    {
+      "rule_id": "FLG001",
+      "dataset": "loan_monthly_performance",
+      "name": "Modification Flag Binary",
+      "description": "Modification flag must be either 0 or 1.",
+      "columns": ["modification_flag"],
+      "type": "allowed_values",
+      "condition": [0, 1],
+      "severity": "error",
+      "message": "Invalid modification flag value; must be binary 0 or 1."
+    },
+    {
+      "rule_id": "FLG002",
+      "dataset": "loan_monthly_performance",
+      "name": "Prepayment Flag Binary",
+      "description": "Prepayment flag must be either 0 or 1.",
+      "columns": ["prepayment_flag"],
+      "type": "allowed_values",
+      "condition": [0, 1],
+      "severity": "error",
+      "message": "Invalid prepayment flag value; must be binary 0 or 1."
+    },
+    {
+      "rule_id": "FLG003",
+      "dataset": "loan_monthly_performance",
+      "name": "Default Flag Binary",
+      "description": "Default flag must be either 0 or 1.",
+      "columns": ["default_flag"],
+      "type": "allowed_values",
+      "condition": [0, 1],
+      "severity": "error",
+      "message": "Invalid default flag value; must be binary 0 or 1."
+    },
+    {
+      "rule_id": "FLG004",
+      "dataset": "loan_monthly_performance",
+      "name": "Modification Delinquency Requirement",
+      "description": "Loan modifications normally occur for delinquent accounts (DPD >= 60). Modifications on current/mildly delinquent loans trigger a warning.",
+      "columns": ["modification_flag", "days_past_due"],
+      "type": "row_condition",
+      "condition": "not (modification_flag == 1 and days_past_due < 60)",
+      "severity": "warning",
+      "message": "Modification occurred on a loan with low delinquency (days past due < 60)."
+    }
+  ],
+
+  "documentation_rules": [
+    {
+      "rule_id": "DOC001",
+      "dataset": "loan_monthly_performance",
+      "name": "Allowed Document Statuses",
+      "description": "Document status must be Complete, Pending, or Missing.",
+      "columns": ["document_status"],
+      "type": "allowed_values",
+      "condition": ["Complete", "Pending", "Missing"],
+      "severity": "error",
+      "message": "Invalid document status value; must be 'Complete', 'Pending', or 'Missing'."
+    },
+    {
+      "rule_id": "DOC002",
+      "dataset": "loan_monthly_performance",
+      "name": "Missing Document Exception Trigger",
+      "description": "If the document status is Missing, an exception must be required.",
+      "columns": ["document_status", "exception_required"],
+      "type": "row_condition",
+      "condition": "not (document_status == 'Missing' and exception_required != 1)",
+      "severity": "error",
+      "message": "Document status is Missing but exception_required is not set to 1."
+    },
+    {
+      "rule_id": "DOC003",
+      "dataset": "loan_monthly_performance",
+      "name": "Missing Document Exception Classification",
+      "description": "If the document status is Missing, exception_type must indicate Documentation Gap.",
+      "columns": ["document_status", "exception_type"],
+      "type": "row_condition",
+      "condition": "not (document_status == 'Missing' and exception_type != 'Documentation Gap')",
+      "severity": "error",
+      "message": "Document status is Missing but exception_type is not 'Documentation Gap'."
+    }
+  ],
+
+  "categorical_rules": [
+    {
+      "rule_id": "CAT001",
+      "dataset": "loan_static_attributes",
+      "name": "Allowed Credit Score Bands",
+      "description": "Credit score band must match underwriting guidelines.",
+      "columns": ["credit_score_band"],
+      "type": "allowed_values",
+      "condition": ["580-619", "620-659", "660-699", "700-739", "740-779", "780+"],
+      "severity": "error",
+      "message": "Credit score band is invalid."
+    },
+    {
+      "rule_id": "CAT002",
+      "dataset": "loan_static_attributes",
+      "name": "Allowed LTV Bands",
+      "description": "Origination Loan-to-Value band must match underwriting guidelines.",
+      "columns": ["ltv_band"],
+      "type": "allowed_values",
+      "condition": ["0-60", "60-70", "70-80", "80-90", "90-100"],
+      "severity": "error",
+      "message": "LTV band is invalid."
+    },
+    {
+      "rule_id": "CAT003",
+      "dataset": "loan_static_attributes",
+      "name": "Allowed DTI Bands",
+      "description": "Origination Debt-to-Income band must match underwriting guidelines.",
+      "columns": ["dti_band"],
+      "type": "allowed_values",
+      "condition": ["0-20", "20-30", "30-40", "40-50"],
+      "severity": "error",
+      "message": "DTI band is invalid."
+    },
+    {
+      "rule_id": "CAT004",
+      "dataset": "loan_static_attributes",
+      "name": "Allowed Loan Purposes",
+      "description": "Loan purpose must match valid categories.",
+      "columns": ["loan_purpose"],
+      "type": "allowed_values",
+      "condition": ["Purchase", "Refinance"],
+      "severity": "error",
+      "message": "Loan purpose must be either 'Purchase' or 'Refinance'."
+    },
+    {
+      "rule_id": "CAT005",
+      "dataset": "loan_static_attributes",
+      "name": "Allowed Occupancy Types",
+      "description": "Property occupancy type must match valid categories.",
+      "columns": ["occupancy_type"],
+      "type": "allowed_values",
+      "condition": ["Primary Residence", "Second Home", "Investment"],
+      "severity": "error",
+      "message": "Occupancy type is invalid."
+    },
+    {
+      "rule_id": "CAT006",
+      "dataset": "loan_static_attributes",
+      "name": "Allowed Property Types",
+      "description": "Property architecture type must match valid categories.",
+      "columns": ["property_type"],
+      "type": "allowed_values",
+      "condition": ["Single Family", "Condominium", "Townhouse", "Multi Unit"],
+      "severity": "error",
+      "message": "Property type is invalid."
+    },
+    {
+      "rule_id": "CAT007",
+      "dataset": "loan_monthly_performance",
+      "name": "Allowed Source Systems",
+      "description": "Supplying database system must be a registered source.",
+      "columns": ["source_system"],
+      "type": "allowed_values",
+      "condition": ["ServicingCore", "LoanPlatform", "RiskSystem"],
+      "severity": "error",
+      "message": "Source system is invalid."
+    }
+  ],
+
+  "servicer_reconciliation_rules": [
+    {
+      "rule_id": "SRV001",
+      "dataset": "servicer_updates",
+      "name": "Servicer Update Source ID Unique",
+      "description": "Each update record in the servicer feed must have a unique identifier.",
+      "columns": ["source_record_id"],
+      "type": "dataset_uniqueness",
+      "condition": "source_record_id",
+      "severity": "error",
+      "message": "Duplicate source record ID found in servicer update feed."
+    },
+    {
+      "rule_id": "SRV002",
+      "dataset": "servicer_updates",
+      "name": "Servicer Timestamp Order",
+      "description": "Servicer local system modification timestamp must be older than feed receipt timestamp.",
+      "columns": ["last_updated_at", "record_received_at"],
+      "type": "row_condition",
+      "condition": "last_updated_at < record_received_at",
+      "severity": "error",
+      "message": "Servicer update date cannot occur after the system record receipt date."
+    },
+    {
+      "rule_id": "SRV003",
+      "dataset": "servicer_updates",
+      "name": "Servicer Receipt Date Bounds",
+      "description": "The servicer updates feed cannot be received before the close of the reporting month.",
+      "columns": ["record_received_at", "reporting_month"],
+      "type": "row_condition",
+      "condition": "record_received_at >= reporting_month",
+      "severity": "error",
+      "message": "Servicer update was received before the reporting period month closed."
+    },
+    {
+      "rule_id": "SRV004",
+      "dataset": "servicer_updates",
+      "name": "Servicer Balance Non-Negative",
+      "description": "Servicer reported outstanding balance cannot be negative.",
+      "columns": ["servicer_current_balance"],
+      "type": "row_condition",
+      "condition": "servicer_current_balance.isna() or servicer_current_balance >= 0",
+      "severity": "error",
+      "message": "Servicer reported a negative outstanding balance."
+    },
+    {
+      "rule_id": "SRV005",
+      "dataset": "servicer_updates",
+      "name": "Servicer DPD Allowed Values",
+      "description": "Servicer reported days past due must be in valid delinquency buckets.",
+      "columns": ["servicer_days_past_due"],
+      "type": "allowed_values_or_null",
+      "condition": [0, 30, 60, 90],
+      "severity": "error",
+      "message": "Servicer reported an invalid days past due bucket."
+    },
+    {
+      "rule_id": "SRV006",
+      "dataset": "servicer_updates",
+      "name": "Servicer Status Allowed Values",
+      "description": "Servicer reported credit status must be Current, Delinquent, Default, or Prepaid.",
+      "columns": ["servicer_status"],
+      "type": "allowed_values_or_null",
+      "condition": ["Current", "Delinquent", "Default", "Prepaid"],
+      "severity": "error",
+      "message": "Servicer reported an invalid credit status."
+    },
+    {
+      "rule_id": "SRV007",
+      "dataset": "servicer_updates",
+      "name": "Expected Partial Update Null Fields",
+      "description": "Updates marked as PARTIAL_UPDATE are expected to contain missing fields; this should be flagged as informational, not a data error.",
+      "columns": ["servicer_update_type", "servicer_current_balance", "servicer_days_past_due", "servicer_status", "servicer_modification_flag", "servicer_document_status"],
+      "type": "conditional_info",
+      "condition": {
+        "if_trigger": "servicer_update_type == 'PARTIAL_UPDATE'",
+        "then_expect_nulls": ["servicer_current_balance", "servicer_days_past_due", "servicer_status", "servicer_modification_flag", "servicer_document_status"]
+      },
+      "severity": "info",
+      "message": "PARTIAL_UPDATE feed contains expected null values."
+    },
+    {
+      "rule_id": "SRV008",
+      "dataset": "servicer_updates",
+      "name": "Expected Stale Record Lag",
+      "description": "Updates marked as STALE represent unprocessed local system updates. Timestamp lag is expected.",
+      "columns": ["servicer_update_type", "last_updated_at", "record_received_at"],
+      "type": "conditional_info",
+      "condition": {
+        "if_trigger": "servicer_update_type == 'STALE'",
+        "then_expect_lag_days": 60
+      },
+      "severity": "info",
+      "message": "Stale update record has expected historical timestamp latency."
+    },
+    {
+      "rule_id": "SRV009",
+      "dataset": "servicer_updates",
+      "name": "Expected Conflict Mismatches",
+      "description": "Updates marked as CONFLICT represent feed errors or mismatch flags for reconciliation testing.",
+      "columns": ["servicer_update_type"],
+      "type": "conditional_info",
+      "condition": "servicer_update_type == 'CONFLICT'",
+      "severity": "info",
+      "message": "Conflict update record contains an expected discrepancies flag."
+    }
+  ],
+
+  "duplicate_rules": [
+    {
+      "rule_id": "DUP001",
+      "dataset": "loan_static_attributes",
+      "name": "Unique Loan Origination Records",
+      "description": "Each loan_id must appear exactly once in the loan static attributes database.",
+      "columns": ["loan_id"],
+      "type": "dataset_uniqueness",
+      "condition": "loan_id",
+      "severity": "error",
+      "message": "Duplicate loan ID record found in origination database."
+    },
+    {
+      "rule_id": "DUP002",
+      "dataset": "loan_monthly_performance",
+      "name": "Unique Monthly Loan Observations",
+      "description": "The combination of loan_id and reporting_month must be unique across all performance panel records.",
+      "columns": ["loan_id", "reporting_month"],
+      "type": "dataset_uniqueness",
+      "condition": ["loan_id", "reporting_month"],
+      "severity": "error",
+      "message": "Duplicate monthly reporting period found for a single loan."
+    }
+  ]
+}
