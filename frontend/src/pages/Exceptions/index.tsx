@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { getAnomalies } from '../../services/api';
 import type { AnomalyListItem } from '../../types';
-import { AlertTriangle, Eye, Clock, User, CheckCircle2, ChevronDown, ChevronUp, Sliders } from 'lucide-react';
+import { AlertTriangle, Eye, Clock, User, CheckCircle2, ChevronDown, ChevronUp, Sliders, Activity } from 'lucide-react';
 
 export const Exceptions: React.FC = () => {
   const navigate = useNavigate();
@@ -88,6 +88,31 @@ export const Exceptions: React.FC = () => {
             <span>Resolve {selectedExceptions.length} Exceptions</span>
           </button>
         )}
+      </div>
+
+      {/* 💡 Plain-English Guide */}
+      <div className="glass-panel rounded-xl p-5 border-l-4 border-l-brand-500 space-y-3">
+        <h3 className="text-xs font-bold text-slate-200 uppercase tracking-wider flex items-center space-x-1.5">
+          <Activity className="h-4 w-4 text-brand-400" />
+          <span>💡 Quick Guide: Understanding Exceptions & Discrepancies</span>
+        </h3>
+        <p className="text-xs text-slate-350 leading-relaxed">
+          The Exception Center tracks inconsistencies, compliance gaps, and data conflicts flagged within the loan files.
+        </p>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-[11px] text-slate-400 pt-1">
+          <div>
+            <strong className="text-slate-300 block mb-0.5">📂 Documentation Gaps</strong>
+            Triggered when essential underwriting files (like income verification sheets or tax returns) are missing, incomplete, or pending review.
+          </div>
+          <div>
+            <strong className="text-slate-300 block mb-0.5">🔍 Ledger Reconciliation Breaks</strong>
+            Occurs when the primary database balance or borrower status conflicts with reports submitted by secondary servicers.
+          </div>
+          <div>
+            <strong className="text-slate-300 block mb-0.5">⚠️ Severe Delinquency</strong>
+            Identifies borrowers who are 60+ days past due. These require immediate manual underwriting review and potential intervention.
+          </div>
+        </div>
       </div>
 
       {/* Filters Bar */}

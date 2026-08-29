@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { predictLive } from '../../services/api';
 import type { LivePredictionPayload, LivePredictionResult } from '../../services/api';
-import { Sparkles, AlertTriangle, BarChart, RefreshCw } from 'lucide-react';
+import { Sparkles, AlertTriangle, BarChart, RefreshCw, Activity } from 'lucide-react';
 
 export const LivePredictor: React.FC = () => {
   const [formData, setFormData] = useState<LivePredictionPayload>({
@@ -109,6 +109,31 @@ export const LivePredictor: React.FC = () => {
           <RefreshCw className="h-3.5 w-3.5" />
           <span>Reset Form</span>
         </button>
+      </div>
+
+      {/* 💡 Plain-English Guide */}
+      <div className="glass-panel rounded-xl p-5 border-l-4 border-l-brand-500 space-y-3">
+        <h3 className="text-xs font-bold text-slate-200 uppercase tracking-wider flex items-center space-x-1.5">
+          <Activity className="h-4 w-4 text-brand-400" />
+          <span>💡 Quick Guide: How to run Live Predictions</span>
+        </h3>
+        <p className="text-xs text-slate-355 leading-relaxed">
+          The Live Predictor lets you test arbitrary loan profiles. Change parameters on the left to see the results immediately.
+        </p>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-[11px] text-slate-400 pt-1">
+          <div>
+            <strong className="text-slate-300 block mb-0.5">🧠 Real-Time Inference</strong>
+            Submits your form directly to our trained ML pipeline. Calculates 3-month Delinquency, 12-month Default, and 12-month Prepayment rates on the fly.
+          </div>
+          <div>
+            <strong className="text-slate-300 block mb-0.5">⚖️ Dynamic Parameter Binning</strong>
+            Continuous variables (e.g. FICO = 720, LTV = 80%) are automatically mapped into categorical bands to feed the decision tree algorithms.
+          </div>
+          <div>
+            <strong className="text-slate-300 block mb-0.5">🔍 Ledger Mismatch Simulation</strong>
+            Check "Include Servicer Ledger Data" and enter conflicting values (e.g. higher DPD or different balance) to see how our reconciliation rules trigger warnings.
+          </div>
+        </div>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">

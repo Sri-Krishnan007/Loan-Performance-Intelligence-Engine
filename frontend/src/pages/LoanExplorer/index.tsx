@@ -12,7 +12,8 @@ import {
   SortAsc,
   Download,
   CheckSquare,
-  TrendingDown
+  TrendingDown,
+  Activity
 } from 'lucide-react';
 
 export const LoanExplorer: React.FC = () => {
@@ -207,6 +208,32 @@ export const LoanExplorer: React.FC = () => {
           >
             <RefreshCw className="h-4 w-4" />
           </button>
+        </div>
+      </div>
+
+      {/* 💡 Plain-English Guide */}
+      <div className="glass-panel rounded-xl p-5 border-l-4 border-l-brand-500 space-y-3">
+        <h3 className="text-xs font-bold text-slate-200 uppercase tracking-wider flex items-center space-x-1.5">
+          <Activity className="h-4 w-4 text-brand-400" />
+          <span>💡 Quick Guide: Navigating the Loan Explorer</span>
+        </h3>
+        <p className="text-xs text-slate-350 leading-relaxed">
+          The Loan Explorer allows you to search, filter, and audit individual mortgage agreements. 
+          Use the parameters below to slice the portfolio.
+        </p>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-[11px] text-slate-400 pt-1">
+          <div>
+            <strong className="text-slate-300 block mb-0.5">💰 Loan-to-Value (LTV) Ratio</strong>
+            Compares the loan amount to the property value. Higher LTV ratios (e.g., &gt;80%) mean the borrower has less equity, resulting in increased risk exposure.
+          </div>
+          <div>
+            <strong className="text-slate-300 block mb-0.5">📊 Debt-to-Income (DTI) Ratio</strong>
+            The percentage of the borrower's monthly gross income that goes toward paying debts. DTIs exceeding 43% are critical indicators of potential default risks.
+          </div>
+          <div>
+            <strong className="text-slate-300 block mb-0.5">🎯 Risk Classification & Action Flags</strong>
+            Based on our ML forecasts, loans are classified as **High, Medium, or Low** risk. High-risk items should be clicked to enter their detailed **Loan Intelligence Workstation**.
+          </div>
         </div>
       </div>
 

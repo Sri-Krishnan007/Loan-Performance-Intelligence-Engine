@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useSearchParams, useNavigate } from 'react-router-dom';
 import { getLoans, generateReviewer, submitReviewerDecision } from '../../services/api';
 import type { LoanItem, ReviewerResponse } from '../../types';
-import { AlertCircle, AlertTriangle, FileText, CheckCircle, HelpCircle, Check, X, ShieldAlert } from 'lucide-react';
+import { AlertCircle, AlertTriangle, FileText, CheckCircle, HelpCircle, Check, X, ShieldAlert, Activity } from 'lucide-react';
 
 export const Reviewer: React.FC = () => {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -116,6 +116,31 @@ export const Reviewer: React.FC = () => {
           AI Reviewer Copilot
         </h1>
         <p className="text-slate-400 text-sm">Grounded LLM-assisted underwriter review summaries and audits.</p>
+      </div>
+
+      {/* 💡 Plain-English Guide */}
+      <div className="glass-panel rounded-xl p-5 border-l-4 border-l-brand-500 space-y-3">
+        <h3 className="text-xs font-bold text-slate-200 uppercase tracking-wider flex items-center space-x-1.5">
+          <Activity className="h-4 w-4 text-brand-400" />
+          <span>💡 Quick Guide: Understanding AI Reviewer & Governance</span>
+        </h3>
+        <p className="text-xs text-slate-350 leading-relaxed">
+          The AI Reviewer leverages a Large Language Model (LLM) to assist human underwriters in reviewing flagged high-risk loans. Here is how governance is enforced:
+        </p>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-[11px] text-slate-400 pt-1">
+          <div>
+            <strong className="text-slate-300 block mb-0.5">🔒 Grounded Reasoning (Not Hallucinations)</strong>
+            Every summary generated is strictly restricted to facts found within our database files and guidelines. Hallucinations are actively suppressed by a 92%+ Grounding index.
+          </div>
+          <div>
+            <strong className="text-slate-300 block mb-0.5">🎛️ Underwriter Tone Adjustments</strong>
+            Choose standard, conservative, or aggressive prompts. A **Conservative** tone increases sensitivity to risk flags, whereas **Aggressive** emphasizes strong borrower attributes.
+          </div>
+          <div>
+            <strong className="text-slate-300 block mb-0.5">⚖️ Human-in-the-Loop & Audit Logs</strong>
+            The AI generates *recommendations*, not final decisions. Underwriters must review and officially accept or override the proposal, which is logged for transparency.
+          </div>
+        </div>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">

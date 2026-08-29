@@ -195,6 +195,32 @@ export const Dashboard: React.FC = () => {
         </div>
       </div>
 
+      {/* 💡 Plain-English Guide */}
+      <div className="glass-panel rounded-xl p-5 border-l-4 border-l-brand-500 space-y-3">
+        <h3 className="text-xs font-bold text-slate-200 uppercase tracking-wider flex items-center space-x-1.5">
+          <Activity className="h-4 w-4 text-brand-400" />
+          <span>💡 Quick Guide: Understanding Portfolio Analytics</span>
+        </h3>
+        <p className="text-xs text-slate-350 leading-relaxed">
+          This dashboard aggregates key performance metrics across active residential and commercial mortgages. 
+          Use the **Cohort Vintage** filter to analyze subsets of loans by origination year. Here is a quick reference:
+        </p>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-[11px] text-slate-400 pt-1">
+          <div>
+            <strong className="text-slate-300 block mb-0.5">📈 Credit Metrics (Delinquency & Default)</strong>
+            Delinquency Rate monitors loans behind on payments (DPD ≥ 30). Default Rate tracks loans showing extreme distress or foreclosure status. Higher values warrant strict policy audits.
+          </div>
+          <div>
+            <strong className="text-slate-300 block mb-0.5">💸 Prepayment Rate</strong>
+            Represents borrowers paying off loans earlier than scheduled. Higher prepayment rates reduce interest yields, whereas lower prepayment indicates stable long-term cash flow.
+          </div>
+          <div>
+            <strong className="text-slate-300 block mb-0.5">🔍 Anomalies & High-Risk</strong>
+            Anomalies are discrepancies between servicer ledger reports and core documentation (e.g. balance mismatches). High-Risk loans exceed a calculated 10% probability of default.
+          </div>
+        </div>
+      </div>
+
       {/* Risk Policy Alerts */}
       {(showDelinquencyAlert || showDefaultAlert) && (
         <div className="bg-rose-950/20 border border-rose-800/80 rounded-xl p-4 flex items-start space-x-3 text-rose-300">

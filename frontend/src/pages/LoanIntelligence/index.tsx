@@ -19,7 +19,8 @@ import {
   CheckCircle,
   FileCheck2,
   Calendar,
-  Settings2
+  Settings2,
+  Activity
 } from 'lucide-react';
 import {
   ResponsiveContainer,
@@ -212,6 +213,31 @@ export const LoanIntelligence: React.FC = () => {
             <span>Run AI Reviewer</span>
             <ChevronRight className="h-4 w-4" />
           </button>
+        </div>
+      </div>
+
+      {/* 💡 Plain-English Guide */}
+      <div className="glass-panel rounded-xl p-5 border-l-4 border-l-brand-500 space-y-3">
+        <h3 className="text-xs font-bold text-slate-200 uppercase tracking-wider flex items-center space-x-1.5">
+          <Activity className="h-4 w-4 text-brand-400" />
+          <span>💡 Quick Guide: Loan Intelligence Workstation</span>
+        </h3>
+        <p className="text-xs text-slate-350 leading-relaxed">
+          The Workstation provides complete transparency into the credit risk factors of this individual mortgage.
+        </p>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-[11px] text-slate-400 pt-1">
+          <div>
+            <strong className="text-slate-300 block mb-0.5">📝 Agency Guideline Audit</strong>
+            Verifies compliance against GSE guidelines (Fannie Mae & Freddie Mac) regarding limits on credit scoring bands, LTV ratios, and DTI parameters. Warnings indicate guideline failures.
+          </div>
+          <div>
+            <strong className="text-slate-300 block mb-0.5">⏳ Risk Forecasts (3m/6m/12m)</strong>
+            Uses specialized gradient-boosting trees (HistGradientBoosting) to calculate the likelihood of default, delinquency, and early prepayment.
+          </div>
+          <div>
+            <strong className="text-slate-300 block mb-0.5">📊 Survival & Transition State Models</strong>
+            Calculates how state transition probabilities shift over time and tracks hazard rates (cumulative transition rates) using competing-risk Markov estimators.
+          </div>
         </div>
       </div>
 
