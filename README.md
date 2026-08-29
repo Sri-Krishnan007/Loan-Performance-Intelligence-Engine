@@ -1,261 +1,100 @@
-# Intain Campus FinTech Challenge 2026 | AI Track
-## AI Track Problem Statement: Loan Performance Intelligence Engine
+# Loan Performance Intelligence Engine
 
-Build an ML-first system for loan-data profiling, performance prediction, anomaly detection, scenario simulation, explainability, and grounded LLM-assisted review.
-
-### 1. Challenge Title
-**Loan Performance Intelligence Engine**
-
-Build an AI system that profiles messy loan-level data, predicts loan performance, detects anomalies, runs simple scenarios, and explains outputs to a human reviewer.
-
-### 2. Participant Hook
-Can you build a small but serious AI engine for loan-level data?
-This challenge is not about wrapping an LLM API. Participants must build real data-science and ML capabilities, including:
-- Data profiling
-- Feature engineering
-- Supervised prediction
-- Time-aware validation
-- Anomaly detection
-- Explainability
-- Model calibration
-- Scenario simulation
-- LLM-assisted reviewer explanations
-- Agentic coding evidence
-
-The LLM can help explain, summarize, retrieve definitions, generate reviewer notes, and assist development, but the core predictive work must come from data science and machine learning.
-
-### 3. Business-Adjacent Context
-Loan-level data is the raw material of many financial workflows. A single loan record may describe loan amount, interest rate, origination date, loan term, geography, credit score band, loan-to-value band, payment status, delinquency status, prepayment status, balance, servicer updates, and document status.
-
-#### Core Question
-Given messy loan-level data and historical performance, can we identify which records are unreliable, which loans are likely to deteriorate, and what the portfolio may look like under different future scenarios?
-
-Participants do not need structured-finance knowledge. They only need to understand tabular data, model development, time-based outcomes, and explainable AI.
-
-### 4. Benchmarking Takeaways
-The AI track is benchmarked against the current direction of analytics platforms serving loans, private credit, and structured finance.
-
-| Benchmark Theme | Implication for the Problem Statement |
-| :--- | :--- |
-| **Data intelligence before modeling** | Require profiling of distributions, missingness, outliers, relationships, association rules, and drift before model training. |
-| **Prediction is multi-outcome** | Move beyond one binary risk label to delinquency, default, prepayment, and next-state prediction. |
-| **Time-aware modeling matters** | Require a time-aware split and at least one survival, hazard, or transition-style model. |
-| **Scenario analytics are table stakes** | Require base, adverse-credit, and high-prepayment scenario projections. |
-| **LLM copilots need governance** | Require grounded explanations, prompt logs, human decision control, and examples of rejected LLM output. |
-
-### 5. Source Data
-The organizer should provide a curated synthetic or preprocessed dataset for judging. It should be inspired by public loan-level sources but should not require students to register with data portals or understand raw mortgage-performance schemas during the hackathon.
-
-- **Fannie Mae Single-Family Loan Performance Data**: [Fannie Mae CRT](https://capitalmarkets.fanniemae.com/credit-risk-transfer/single-family-credit-risk-transfer/fannie-mae-single-family-loan-performance-data)
-- **Fannie Mae Data Dynamics**: [Data Dynamics](https://datadynamics.fanniemae.com/data-dynamics/#/reportMenu;category=Loan_Performance)
-- **Freddie Mac Single-Family Loan-Level Dataset**: [Freddie Mac Dataset](https://www.freddiemac.com/research/datasets/sf-loanlevel-dataset)
-- **Freddie Mac Clarity Data Intelligence Download Portal**: [Clarity Portal](https://claritydownload.fmapps.freddiemac.com/)
-- **HMDA Data Publication**: [HMDA Portal](https://ffiec.cfpb.gov/data-publication/)
-- **HMDA Public LAR Data Fields**: [LAR Data Fields](https://ffiec.cfpb.gov/documentation/publications/loan-level-datasets/lar-data-fields)
-
-### 6. Organizer-Provided Data Pack
-| File | Purpose / Expected contents |
-| :--- | :--- |
-| `loan_monthly_performance_train.csv` | Panel dataset with one row per loan per month; suggested 250,000 to 1,000,000 rows; includes static and monthly performance features plus target labels. |
-| `loan_monthly_performance_test.csv` | Unlabeled test dataset for final scoring. Participants submit probabilities, anomaly scores, and reviewer actions. |
-| `loan_static_attributes.csv` | Origination-level information such as original balance, credit-score band, LTV band, DTI band, state, loan purpose, property type, and vintage. |
-| `servicer_updates.csv` | Second-source file with partial or conflicting updates used for source conflict detection, stale record logic, and reconciliation. |
-| `data_dictionary.md` | Plain-English field definitions used for feature understanding, LLM grounding, and documentation. |
-| `validation_rules.json` | Starter deterministic checks for balance consistency, date validity, delinquency consistency, closed/prepaid status, and document gaps. |
-| `macro_scenarios.csv` | Simple scenario assumptions for base, adverse-credit, and high-prepayment cases. |
-| `submission_template.csv` | Required output format for probabilities, next state, exception type, anomaly score, top drivers, action, and confidence. |
-
-### 7. Example Training Fields and Targets
-The main training file should contain monthly loan performance records. Example fields include:
-`loan_id`, `month_index`, `reporting_month`, `origination_month`, `loan_age_months`, `remaining_term_months`, `original_balance`, `current_balance`, `interest_rate`, `credit_score_band`, `ltv_band`, `dti_band`, `state`, `loan_purpose`, `occupancy_type`, `property_type`, `servicer_name`, `current_status`, `days_past_due`, `modification_flag`, `prepayment_flag`, `default_flag`, `loss_severity_band`, `last_updated_at`, `source_system`, `document_status`.
-
-Target variables should include `next_3m_delinquency_flag`, `next_6m_delinquency_flag`, `next_12m_default_flag`, `next_12m_prepayment_flag`, `next_state`, `exception_required`, and `exception_type`.
-
-### 8. Required Tasks
-1. **Task 1: Data Intelligence and Profiling**
-   - Profile column distributions.
-   - Identify missing-value patterns.
-   - Detect outliers and invalid date relationships.
-   - Identify correlations and highly dependent fields.
-   - Detect cross-column relationship breaks.
-   - Compare train versus test drift.
-   - Generate record-level and batch-level data-quality scores.
-2. **Task 2: Loan Performance Prediction**
-   - Train non-LLM models for delinquency, default, prepayment, and next-state prediction.
-   - Use a time-aware split rather than random row-level splitting.
-   - Compare baseline and improved models.
-   - Handle class imbalance and calibration.
-   - Use metrics such as ROC-AUC, PR-AUC, F1, recall at fixed precision, Brier score, and macro-F1.
-3. **Task 3: Time-to-Event or Survival Modeling**
-   - Implement a survival, hazard, competing-risk approximation, or monthly transition model.
-   - Show event curves or cumulative probabilities.
-   - Explain treatment of censoring or state transitions.
-   - Compare against a simpler baseline.
-4. **Task 4: Anomaly and Exception Detection**
-   - Generate a record-level anomaly score.
-   - Predict exception probability and exception type.
-   - Explain anomaly drivers.
-   - Provide at least 20 reviewer-ready anomaly examples.
-5. **Task 5: Scenario and Stress Simulation**
-   - Apply base, adverse-credit, and high-prepayment scenarios.
-   - Produce projected delinquency, default, and prepayment rates.
-   - Show segment-level impacts by vintage, credit band, state, or servicer.
-   - Explain top scenario drivers.
-6. **Task 6: Explainability Layer**
-   - Provide global feature importance and local explanations.
-   - Explain drivers of default, delinquency, prepayment, and anomaly scores.
-   - Show model confidence or uncertainty.
-   - Analyze false positives and false negatives.
-7. **Task 7: LLM-Assisted Reviewer Copilot**
-   - Use an LLM for grounded summaries, reviewer notes, data-dictionary retrieval, rule suggestions, scenario summaries, or natural-language analysis.
-   - Log prompt, model, timestamp, and output.
-   - Label LLM output as a recommendation, not a decision.
-   - Include examples where the LLM was wrong, vague, or overconfident.
-8. **Task 8: Agentic ML Development Evidence**
-   - Submit an AI Development Log.
-   - Document AI tools used, representative prompts, accepted/rejected outputs, human review process, approximate AI-generated code share, and lessons learned.
-
-### 9. Minimum Acceptable Solution
-- Reproducible data pipeline
-- Data profiling report
-- Feature engineering
-- Non-LLM supervised model
-- Time-aware train / validation split
-- Delinquency or default prediction
-- Prepayment or next-state prediction
-- Anomaly or exception detection
-- Explainability output
-- LLM reviewer summary
-- Model card
-- AI Development Log
-- `submission.csv`
-
-*Qualification rule: A solution that only sends records to an LLM API for classification should not qualify.*
-
-### 10. Advanced Features
-- Competing-risk survival model
-- Monte Carlo portfolio simulation
-- Drift monitoring dashboard
-- Segment-level scenario curves
-- Model calibration by vintage or credit band
-- MLflow or Weights & Biases experiment tracking
-- RAG over data dictionary and validation rules
-- Agentic experiment runner
-- Automated feature-store style pipeline
-- Bias / fairness analysis
-- Counterfactual explanations
-- Stress sensitivity by feature cluster
-- Model confidence intervals
-- Human-in-the-loop active learning
-- Synthetic-data stress testing
-
-### 11. Expected Deliverables
-| Deliverable | Description |
-| :--- | :--- |
-| **GitHub repository** | Complete source code. |
-| **Reproducible notebook or scripts** | End-to-end model development and scoring workflow. |
-| **submission.csv** | Predictions in the required format. |
-| **Model card** | Objective, data, features, model type, validation method, metrics, limitations, leakage controls, and known failure modes. |
-| **Data intelligence report** | Profiling, missingness, outliers, drift, relationship checks, and top anomalies. |
-| **Explainability report** | Global feature importance, local examples, false positives, false negatives, and model uncertainty. |
-| **Scenario report** | Base, adverse, and high-prepayment scenario outputs. |
-| **LLM copilot demo** | Grounded reviewer explanation or natural-language analysis. |
-| **AI Development Log** | Required. |
-| **Five-minute demo video** | End-to-end flow. |
-
-### 12. Judging Criteria
-| Criterion | Points | What judges should look for |
-| :--- | :--- | :--- |
-| **Data Intelligence and Profiling** | 15 | Missingness, outliers, relationship checks, train/test drift, and data-quality score. |
-| **Predictive Modeling** | 20 | Supervised models, time-aware split, class imbalance handling, default/delinquency/prepayment prediction, calibration. |
-| **Time-to-Event / Transition Modeling** | 15 | Survival, hazard, or transition model with sensible curves/projections and baseline comparison. |
-| **Anomaly and Exception Intelligence** | 10 | Suspicious record detection, anomaly drivers, rule/ML combination, reviewer-ready examples. |
-| **Scenario and Stress Simulation** | 10 | Base/adverse/high-prepayment scenarios, segment outputs, impact explanation. |
-| **Explainability and Responsible AI** | 10 | Global/local explanations, model card, error analysis, calibration, uncertainty, limitations. |
-| **Smart LLM Usage** | 10 | Grounded LLM output, useful reviewer summaries, prompt logs, hallucination controls, ML not replaced by LLM. |
-| **ML Engineering and Reproducibility** | 5 | Clean code, runnable pipeline, reproducible submission, README. |
-| **Agentic Coding Evidence** | 5 | AI Development Log, useful prompts, human review process, rejected AI output examples. |
-
-### 13. Low-Score or Disqualification Conditions
-- Only uses an LLM API for prediction.
-- Does not train a non-LLM model.
-- Uses random splits that leak the same loan across train and validation without justification.
-- Leaks target labels into features.
-- Provides no reproducible code.
-- Provides no evaluation metrics.
-- Fabricates results.
-- Uses public data in violation of source terms.
-- Cannot explain model behavior.
-- Presents LLM-generated narratives without grounding.
-
-### 14. Five-Minute Demo Flow
-1. Dataset and targets
-2. Data profiling report
-3. Top data-quality issues
-4. Feature-engineering approach
-5. Time-aware split
-6. Baseline model performance
-7. Improved model performance
-8. Survival or transition model output
-9. Anomaly examples
-10. Scenario output
-11. Local explanation for one loan
-12. LLM-generated reviewer note
-13. Example of LLM output rejected or corrected
-14. Final submission file
-15. AI Development Log
+An ML-first system for loan-data profiling, performance prediction, operational anomaly detection, scenario simulation, model explainability, and grounded LLM-assisted review. Built for the **Intain Campus FinTech Challenge 2026 (AI Track)**.
 
 ---
 
-## 🛠️ System Architecture & Quick Start
+## 🚀 The Pipeline Flow (Tasks Completed)
 
-The solution contains a **React + TypeScript + Vite** frontend and a **FastAPI Python** backend.
+The engine processes data chronologically through a 9-phase pipeline:
 
-### Setup Instructions
+1. **Phase 1: Data Loader, Validation & Profiling**
+   * Profiles column distributions, missingness patterns, and outliers.
+   * Computes train vs. test feature drift (PSI) and generates automated record-level quality scores.
+2. **Phase 2: Feature Engineering & Preprocessing**
+   * Processes static attributes, computes financial ratios, and aggregates rolling monthly statistics.
+   * Employs time-aware target engineering (3m/6m delinquency, 12m default, and 12m prepayment flags) preventing temporal leakage.
+3. **Phase 3: Risk Model Training & Calibration**
+   * Trains classification models for multi-outcome prediction (delinquency, default, prepayment).
+   * Implements chronological Out-of-Time (OOT) validation splits and applies Isotonic Probability Calibration to ensure reliable outputs.
+4. **Phase 4: Competing Risk & Transition Survival Curves**
+   * Estimates monthly state transitions (Current, Delinquent, Default, Prepaid) using a Markov transition matrix.
+   * Generates event-specific cumulative survival and hazard curves.
+5. **Phase 5: operational Anomaly Detection**
+   * Builds a hybrid scoring system combining machine learning (Isolation Forest) with deterministic cross-source reconciliation checks (detecting conflicting servicer updates and document gaps).
+6. **Phase 6: Model Explainability**
+   * Outputs global feature importances using Permutation Importance.
+   * Calculates local prediction drivers (positive and negative risk factors) for individual loan reviews.
+7. **Phase 7: Stress Scenario Projections**
+   * Simulates portfolio performance under three macro scenarios: `BASE`, `ADVERSE_CREDIT`, and `HIGH_PREPAYMENT`.
+   * Projects delinquency, default, and prepayment curves at segment levels (vintage, credit band).
+8. **Phase 8: Grounded LLM Reviewer Copilot**
+   * Employs an LLM reviewer powered by Groq to generate underwriter review summaries and reviewer notes.
+   * Grounded with static data dictionaries and validation rules, outputs are strictly classified as *recommendations*.
+9. **Phase 9: Unified Inference & Scoring Pipeline**
+   * Connects all preceding phases into an automated end-to-end execution pipeline, generating the final submission predictions.
 
-1. **Install Root and Frontend Dependencies**:
-   From the project root:
-   ```bash
-   npm run install:all
-   ```
+---
 
-2. **Configure Environment Variables**:
-   Copy the environment files and fill in your variables:
-   ```bash
-   cp .env.example .env
-   cp backend/.env.example backend/.env
-   ```
+## 📂 Project Structure
 
-3. **Install Python Backend Dependencies**:
-   ```bash
-   pip install -r backend/requirements.txt
-   ```
+```text
+├── backend/          # Python FastAPI REST API server
+├── frontend/         # React + TypeScript + Tailwind UI client
+├── scripts/          # Loose execution and data generation scripts
+│   ├── 01_...py      # Data generators
+│   └── run_phase.py  # Phase runners (Phases 1-9)
+├── src/              # Core ML engine modules (profiling, modeling, LLM, scenarios)
+├── data/             # Synthetic datasets and dictionary metadata
+├── models/           # Pre-trained ML model joblib files
+├── outputs/          # Pipeline runs intermediate outputs
+├── reports/          # Data reports (anomaly, scenario, calibration, etc.)
+└── package.json      # Monorepo task configurations
+```
 
-### Running the Project
+---
 
-- **Option A: Run Frontend and Backend Together (In Parallel)**:
-  From the project root:
-  ```bash
-  npm run dev
-  ```
+## 🛠️ Getting Started (How to Clone and Run)
 
-- **Option B: Run Individually**:
-  * **FastAPI Backend**:
-    From the project root:
-    ```bash
-    uvicorn backend.app.main:app --port 8000 --reload
-    ```
-  * **React Frontend**:
-    From the project root:
-    ```bash
-    npm run dev:frontend
-    ```
+### 1. Clone the Repository
+```bash
+git clone https://github.com/shubh100802/loan-verification-copilot.git
+cd loan-verification-copilot
+```
 
-### Running Python Pipeline & Generation Scripts
+### 2. Install All Dependencies
+Install node dependencies (for monorepo and React frontend) and Python requirements:
+```bash
+# Install root and frontend npm packages
+npm run install:all
 
-All data-generation and ML phase scripts are organized under the `scripts/` directory. You can run them from the project root folder:
+# Install Python backend and ML pipeline requirements
+pip install -r backend/requirements.txt
+```
 
-* **To regenerate the synthetic datasets**:
+### 3. Configure Environment Variables
+Copy `.env.example` to `.env` in the root folder, and `.env.example` in the backend folder:
+```bash
+cp .env.example .env
+cp backend/.env.example backend/.env
+```
+*Note: Make sure to add your `GROQ_API_KEY` to the `.env` file to enable the AI Reviewer Copilot features.*
+
+### 4. Run Development Servers (Parallel Mode)
+To launch the React client and the FastAPI backend server in parallel, run:
+```bash
+npm run dev
+```
+* The **FastAPI backend** will run at: http://localhost:8000
+* The **React frontend UI** will run at: http://localhost:5173 (or http://localhost:3000)
+
+---
+
+## 💻 Running the Data Pipeline & Phase Scripts
+
+All processing scripts are situated in the `scripts/` directory and can be executed directly from the project root:
+
+* **To generate the synthetic datasets**:
   ```bash
   python scripts/01_create_static_attributes.py
   python scripts/02_create_monthly_performance_train.py
@@ -263,11 +102,14 @@ All data-generation and ML phase scripts are organized under the `scripts/` dire
   python scripts/04_create_servicer_updates.py
   ```
 
-* **To run the ML/AI pipeline phases (Phase 1 to 9)**:
+* **To run any pipeline phase script individually**:
   ```bash
+  # Execute Phase 1 (Data Validation & Profiling)
   python scripts/run_phase1.py
-  python scripts/run_phase2.py
-  # ... and so on up to phase 9:
+
+  # Execute Phase 3 (Model Training)
+  python scripts/run_phase3.py
+
+  # Run any phase script through Phase 9 (End-to-End Scoring)
   python scripts/run_phase9.py
   ```
-
