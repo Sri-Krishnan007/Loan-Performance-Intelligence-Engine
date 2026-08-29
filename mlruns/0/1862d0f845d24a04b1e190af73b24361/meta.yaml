@@ -1,0 +1,13 @@
+artifact_uri: file:///C:/Sk PC/My Guidelines/Placement Prep/INTAIN/LAC/loan-verification-copilot/mlruns/0/1862d0f845d24a04b1e190af73b24361/artifacts
+end_time: 1716912000000
+entry_point_name: ''
+experiment_id: '0'
+lifecycle_stage: active
+run_id: 1862d0f845d24a04b1e190af73b24361
+run_name: HistGradientBoosting_Config_3
+run_uuid: 1862d0f845d24a04b1e190af73b24361
+source_name: scripts/agentic_experiment_runner.py
+source_type: 4
+start_time: 1716911990000
+status: 3
+user_id: Sri-Krishnan007
