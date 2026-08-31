@@ -1,5 +1,19 @@
 @import "tailwindcss";
 
+@theme {
+  --color-brand-50: #f0f7ff;
+  --color-brand-100: #e0effe;
+  --color-brand-200: #bbdffd;
+  --color-brand-300: #7cc2fc;
+  --color-brand-400: #38a0f8;
+  --color-brand-500: #0e83e3;
+  --color-brand-600: #0265bc;
+  --color-brand-700: #035198;
+  --color-brand-800: #07457d;
+  --color-brand-900: #0c3a69;
+  --color-brand-950: #082545;
+}
+
 @layer base {
   body {
     @apply bg-slate-900 text-slate-100 font-sans antialiased;
@@ -62,3 +76,17 @@
 ::-webkit-scrollbar-thumb:hover {
   background: #334155;
 }
+
+/* Force dark-mode dropdown option list items to be visible across all browsers */
+select option {
+  background-color: #0f172a !important; /* solid dark slate-900 background */
+  color: #f1f5f9 !important;            /* readable light slate-100 text */
+}
+
+/* Ensure focused/active select elements options remain readable */
+select:focus option,
+select:active option {
+  background-color: #0f172a !important;
+  color: #f1f5f9 !important;
+}
+
