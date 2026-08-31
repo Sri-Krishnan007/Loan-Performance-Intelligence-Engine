@@ -1,13 +1,71 @@
-# AI Development Log & System Architecture: Loan Performance Intelligence Engine
+# AI Development Log - Loan Performance Intelligence Engine
 
-This document provides a highly detailed log of the collaborative development process, domain architecture decisions, machine learning strategies, and expert human review corrections implemented during the build of the **Loan Performance Intelligence Engine**.
+This document provides a detailed log of the collaborative development process, machine learning strategies, domain architecture decisions, and human review corrections implemented during the build of the **Loan Performance Intelligence Engine**.
 
 ---
 
-## 1. Directory Structure & Source Code Inventory
+## 1. AI Tools Used
+* **Google Antigravity IDE Agent**: Managed pair programming, codebase diagnostics, automatic directory audits, and file refactoring.
+* **Gemini 3.5 Flash / Pro**: Handled real-time code synthesis, complex mathematical script suggestions, and schema troubleshooting.
+* **pytest Automation Task**: Background terminal runner to dynamically test and verify python router validations.
 
-A complete analysis of the codebase reveals a modular, production-ready system split into logical components. The human ML architect guided this layout to ensure separation of concerns:
+---
 
+## 2. Representative Prompts
+* **Ingestion Pipeline**: 
+  > *"Initialize a Feature Store style pipeline loading raw csv segments. Build rolling maximums on days past due and count modifications without creating temporal target leakage."*
+* **Calibration Sweep**: 
+  > *"Create an agentic experiment sweeps runner script. Split data chronologically before 2025. Log parameters, ROC-AUC, and F1-Scores to mlruns local folder structures. Select the champion model configuration."*
+* **Explainability Interface**: 
+  > *"Write a counterfactual suggestion generator. If default risk exceeds 5%, list the adjustments needed for DTI, LTV, and FICO to achieve prime credit risk status."*
+* **Model Health Metrics Fix**: 
+  > *"Correct the dictionary key lookups in model_service.py to correctly parse improved_calibrated and improved next_state model metrics from model_performance.json to prevent 0.0000 outputs in the frontend."*
+* **Dynamic Time Period Scaling**: 
+  > *"Update the scenario simulator to accept start_date and end_date. Filter the portfolio dataframe dynamically, and mathematically scale the Monte Carlo credit VaR rates, VaR amounts, and Stress Matrix default probabilities using the baseline ratios."*
+
+---
+
+## 3. Accepted & Rejected Outputs
+
+### A. Accepted Agentic Outputs (Implemented Fixes & Features)
+* **Case Study A (Pydantic V2 Environment Crash)**: Autonomously updated [`config.py`](file:///c:/Sk%20PC/My%20Guidelines/Placement%20Prep/INTAIN/LAC/loan-verification-copilot/backend/app/config.py) to append Pydantic's `extra = 'ignore'` rule to prevent env configuration crashes.
+* **Case Study B (Left Join Suffix Reconciliation)**: Resolved a `KeyError: 'servicer_name'` by adjusting expected dataframe join suffixes.
+* **Case Study C (TypeScript Compiler Warnings)**: Prefixing unused React properties with underscores (`_entry: any`) to satisfy strict `noUnusedLocals` validation rules.
+* **Case Study D (Model Health Metrics Correction)**: Fixed backend [`model_service.py`](file:///c:/Sk%20PC/My%20Guidelines/Placement%20Prep/INTAIN/LAC/loan-verification-copilot/backend/app/services/model_service.py) path mappings querying `"improved_calibrated"` and `"improved"` keys to show true Brier score metrics.
+* **Case Study E (Scenarios Recharts & Dynamic Scaling)**: Bound Recharts `<BarChart>` columns to `"Baseline"` and `"Stressed"` data keys and updated simulator routes to accept optional dates, scaling Monte Carlo VaR tail risk boundaries and Stress Matrix default probabilities dynamically.
+
+### B. Rejected AI Outputs (Human ML Architect Decisions)
+* **SHAP Library integration for Local Explanations**: The AI suggested using the SHAP library. This was rejected due to slow computation times for real-time dashboards and compilation dependencies.
+  * *Resolution*: Swapped for pre-calculated feature importance maps and category rules to yield immediate UI responsiveness.
+* **Naive `cv='prefit'` calibration in Scikit-Learn**: The AI proposed simple prefit estimators in `CalibratedClassifierCV`. This was rejected due to strict frozen estimator exceptions thrown by scikit-learn version constraints.
+  * *Resolution*: Built a custom calibration wrapper verifying fit states across package updates.
+* **Decommissioned Groq LLM Models**: The AI originally parameterized LLM calls to Groq's decommissioned `llama3-70b-8192` model, resulting in HTTP 400 API errors.
+  * *Resolution*: Pivot configs to active `qwen/qwen3.8-27b` parameters.
+
+---
+
+## 4. Human Review Process
+1. **Chronological Splitting Audits**: The human reviewer rejected random cross-validation to prevent temporal target leakage, enforcing a strict chronological separator split.
+2. **Reconciliation Break Rule Verification**: Enforced a manual balance-break exception threshold ($10.00 difference between servicer ledger and primary records) to supplement unsupervised Isolation Forest models.
+3. **Interactive Simulation Verification**: Audited the dynamic scaling logic under different date ranges to verify mathematical proportion boundaries.
+
+---
+
+## 5. Approximate AI-Generated Code Share
+* **AI-Generated Code Share**: **~85%** of the codebase (FastAPI routers, React/TypeScript components, Recharts visualizations, math scripts, and data profilers).
+* **Human-Architected Share**: **~15%** (Ingestion structure rules, temporal leakage controls, validation constraints, and final code reviews).
+
+---
+
+## 6. Lessons Learned
+1. **Finance Model Leakage**: Standard random train/test splits leak future economic trends. Implementing **chronological out-of-time splits** is mandatory for credit validation.
+2. **Probability Calibration**: Calibrating default probabilities via **Isotonic Regression** is critical to optimize Brier Scores and align model outputs with true empirical default rates.
+3. **Dynamic Performance Optimization**: Heavy calculations (like Monte Carlo simulations) must be scaled using backend ratio estimators to maintain sub-second UI updates.
+4. **Strict Chart Mappings**: Double-check chart binding keys (`dataKey`) to ensure they match target data formats; otherwise, Recharts components will render blank without throwing syntax errors.
+
+---
+
+## 7. Directory Structure & Source Code Inventory
 ```
 ├── backend/                  # FastAPI Application Server
 │   ├── app/
@@ -25,7 +83,7 @@ A complete analysis of the codebase reveals a modular, production-ready system s
 ├── src/                      # ML Modeling Core Package
 │   ├── anomaly/              # Isolation Forest anomaly scoring
 │   ├── data/                 # Raw dataset handlers & IO loader
-│   ├── features/             # Financial feature store pipeline builder
+│   ├── features/             # Feature store pipeline builder
 │   ├── models/               # Classifiers, Calibrators, and Markov state models
 │   ├── explainability/       # Permutation importance & counterfactual generators
 │   ├── scenarios/            # Macroeconomic stress multiplier curves
@@ -49,15 +107,13 @@ A complete analysis of the codebase reveals a modular, production-ready system s
 
 ---
 
-## 2. Mathematical Models & Financial Risk Strategy
-
-The system contains robust mathematical formulations verifying credit risk, prepayment rates, and portfolio stability:
+## 8. Mathematical Models & Financial Risk Strategy
 
 ### A. Delinquency Migration Markov Transition Matrix
 Credit performance is treated as a stochastic process. The system models migration probabilities between states:
 1. **State 0 (Current)**: Account in good standing.
-2. **State 1 (Delinquent)**: 30–89 Days Past Due (DPD).
-3. **State 2 (Default)**: 90+ DPD or write-off.
+2. **State 2 (Default)**: 90+ DPD or write-off.
+3. **State 1 (Delinquent)**: 30–89 Days Past Due (DPD).
 4. **State 3 (Prepaid)**: Loan fully paid off before maturity.
 
 A transition matrix $T$ is computed from historical reporting records, where entry $P_{ij}$ represents the probability of transitioning from state $i$ to state $j$ in the next month:
@@ -69,12 +125,12 @@ P_{20} & P_{21} & P_{22} & P_{23} \\
 P_{30} & P_{31} & P_{32} & P_{33} 
 \end{pmatrix}$$
 
-* **Verification Constraint**: Row probability sums are enforced to equal $1.000$ exactly ($\sum_{j=1}^{4} P_{ij} = 1.0$) to maintain probability conservation during multi-month projections.
+* **Verification Constraint**: Row probability sums are enforced to equal $1.000$ exactly ($\sum_{j=1}^{4} P_{ij} = 1.0$) to maintain probability conservation.
 
 ### B. Vectorized Monte Carlo Portfolio Simulator
 To compute tail risk limits over a 12-month projection horizon, the Monte Carlo engine performs 1,000 trials on the portfolio's active principal balance:
-* **Prepayment Transition**: Simulates voluntary early prepayments, adjusting the interest-earning balance.
-* **Write-offs**: Models transition to default, applying a standard **Loss Given Default (LGD) / Loss Severity** rate of $45\%$.
+* **Prepayment Transition**: Simulates voluntary prepayments, adjusting the interest-earning balance.
+* **Write-offs**: Models transition to default, applying a **Loss Given Default (LGD) / Loss Severity** rate of $45\%$.
 * **Metrics Calculated**:
   * **Expected Loss Rate**: The mean write-off rate across all simulation paths.
   * **95% Credit Value-at-Risk (VaR)**: The loss threshold that will not be exceeded with $95\%$ confidence.
@@ -91,10 +147,10 @@ $$\text{Equity Stress} \in \{\text{Base}, \text{Moderate (LTV +10\%)}, \text{Sev
 
 ---
 
-## 3. Machine Learning Modeling & Calibration Pipeline
+## 9. Machine Learning Modeling & Calibration Pipeline
 
 ### A. Non-LLM Predictive Modeling Strategy
-* **Algorithms**: Standard risk predictions utilize a `HistGradientBoostingClassifier` trained on engineered features (interest rates, original balances, current balances, delinquency histories, and modifications).
+* **Algorithms**: Standard risk predictions utilize a `HistGradientBoostingClassifier` trained on engineered features.
 * **Leakage Controls**:
   * **Chronological Out-of-Time Separation**: Training features are separated chronologically at `2025-01-01` to isolate validation data. Random cross-validation is forbidden to prevent target leakage.
   * **Target Elimination**: Target indicators (`next_12m_default_flag`, `next_state`) are removed from input vectors.
@@ -111,10 +167,7 @@ $$\text{Balance Break} = | \text{Primary Balance} - \text{Servicer Balance} | > 
 
 ---
 
-## 4. High-Fidelity UI/UX Showcase Layout
-
-The frontend is built to highlight the system's underlying analytical intelligence using premium design choices:
-
+## 10. High-Fidelity UI/UX Showcase Layout
 1. **Ambient Glassmorphism**: Containers feature semi-transparent backdrop blur parameters, soft border gradients, and distinct active highlights to create a premium interface.
 2. **Real-time Live Predictor Workstation**:
    * Underwriters can input test parameters (FICO score, LTV, DTI) to calculate risk probabilities dynamically.
@@ -128,56 +181,7 @@ The frontend is built to highlight the system's underlying analytical intelligen
 
 ---
 
-## 5. Agentic Coding Case Studies & Evidence
-
-The AI agent, working under the reviewer's oversight, demonstrated autonomous diagnostic and coding capabilities to solve implementation bottlenecks:
-
-### Case Study A: Resolving Pydantic V2 Environment Crash
-* **Problem**: The backend crashed at startup due to strict Pydantic V2 validation constraints. The active `.env` configuration contained unrecognized keys (like `mongourl`), which standard configurations rejected.
-* **Agentic Evidence**: The agent autonomously located the Pydantic configuration file [`config.py`](file:///c:/Sk%20PC/My%20Guidelines/Placement%20Prep/INTAIN/LAC/loan-verification-copilot/backend/app/config.py) and appended the metadata rule `extra = 'ignore'` to bypass validation crashes while preserving standard setting properties.
-
-### Case Study B: Left Join Suffix Reconciliation
-* **Problem**: During production run tests, a `KeyError: 'servicer_name'` surfaced. The feature extraction logic renaming primary and servicer columns post left-join shifted expected keys.
-* **Agentic Evidence**: The agent analyzed the dataframe join schemas inside the scoring pipeline, identified the suffix renaming formats, and added keys mapping adjustments to restore model predictions.
-
-### Case Study C: Strict TypeScript Compiler Warnings
-* **Problem**: Frontend builds failed on strict unused local constraints (`noUnusedLocals`) on variables like `entry` mapping scatter charts.
-* **Agentic Evidence**: Instead of ignoring compilation warnings, the agent refactored parameter declarations, prefixing unused items with underscores (e.g., `_entry: any`), satisfying compiler validation tests.
-
----
-
-## 6. Prompt Engineering Inventory
-
-Specific prompts that guided the system construction:
-* **Ingestion Pipeline**: *"Initialize a Feature Store style pipeline loading raw csv segments. Build rolling maximums on days past due and count modifications without creating temporal target leakage."*
-* **Calibration Sweep**: *"Create an agentic experiment sweeps runner script. Split data chronologically before 2025. Log parameters, ROC-AUC, and F1-Scores to mlruns local folder structures. Select the champion model configuration."*
-* **Explainability Interface**: *"Write a counterfactual suggestion generator. If default risk exceeds 5%, list the adjustments needed for DTI, LTV, and FICO to achieve prime credit risk status."*
-
----
-
-## 7. Human Review Process & Rejected AI Outputs
-
-During verification checks, the human reviewer actively audited model integrity and rejected several naive AI proposals:
-
-### A. Rejecting SHAP Library in Explainability
-* **AI Proposed**: Integrating the SHAP library to compute local explanations on-the-fly.
-* **Reviewer Rejection**: "SHAP is computationally slow for interactive screens, requires extra external package dependency compilation, and is prone to runtime crashes. Reject SHAP. Implement permutation feature importance and static feature risk drivers instead."
-* **Resolution**: The engine used permutation importance metrics from Phase 6 combined with categorical mapping definitions to yield rapid UI feedback.
-
-### B. Rejecting Naive `cv='prefit'` Calibration Configurations
-* **AI Proposed**: Training baseline classifiers and immediately using `CalibratedClassifierCV(base_model, cv='prefit')` in scikit-learn.
-* **Reviewer Rejection**: "Scikit-learn 1.8.0 changed pre-fit parameter constraints, throwing strict frozen estimator exceptions when fitting validation splits."
-* **Resolution**: Replaced with proper frozen calibration estimators to ensure cross-version compatibility.
-
-### C. Rejecting Decommissioned Llama3 Groq Models
-* **AI Proposed**: Querying the decommissioned `llama3-70b-8192` model for automated underwriter summaries.
-* **Reviewer Rejection**: "Llama3-70b is decommissioned on Groq and returns API HTTP 400 errors. Pivot to an active model."
-* **Resolution**: Re-parameterized default configs to `qwen/qwen3.8-27b` to restore LLM-grounded review validation checks.
-
----
-
-## 8. Responsible AI & Compliance
-
+## 11. Responsible AI & Compliance
 * **Underwriter Advisory Clause**: Every automated LLM review or prediction is marked with a compliance header: `"Recommendation — Not a Decision"` to align with regulatory requirements for human-in-the-loop credit verification.
 * **Confidence Metrics**: Predicted targets are output with statistical confidence scores.
 * **Context Grounding**: Prompt templates isolate data schemas and check lists to prevent hallucinations in AI reviews.
