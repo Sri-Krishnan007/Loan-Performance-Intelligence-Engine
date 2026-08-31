@@ -29,6 +29,12 @@ class ScenarioService:
             
             # Group by loan_id and take the latest record per loan in that period
             grouped_df = df.sort_values("reporting_month").groupby("loan_id").last().reset_index()
+            
+            if grouped_df.empty:
+                raise HTTPException(
+                    status_code=400,
+                    detail=f"No loan records found between '{start_date}' and '{end_date}'. Note: Reporting months are recorded on the 1st of each month (e.g. 2019-02-01)."
+                )
         else:
             grouped_df = loan_state.latest_records
 

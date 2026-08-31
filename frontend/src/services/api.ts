@@ -442,7 +442,7 @@ export interface StressSensitivityItem {
   average_default_probability: number;
 }
 
-export const getMonteCarlo = async (): Promise<MonteCarloMetrics> => {
+export const getMonteCarlo = async (start_date?: string, end_date?: string): Promise<MonteCarloMetrics> => {
   if (isMockModeActive()) {
     return {
       portfolio_initial_balance: 411051634.15,
@@ -464,7 +464,12 @@ export const getMonteCarlo = async (): Promise<MonteCarloMetrics> => {
     };
   }
   try {
-    const res = await client.get<MonteCarloMetrics>('/scenarios/monte-carlo');
+    const res = await client.get<MonteCarloMetrics>('/scenarios/monte-carlo', { 
+      params: { 
+        start_date: start_date || null, 
+        end_date: end_date || null 
+      } 
+    });
     return res.data;
   } catch (err) {
     console.warn("Backend /scenarios/monte-carlo unavailable, using mock data.", err);
@@ -489,7 +494,7 @@ export const getMonteCarlo = async (): Promise<MonteCarloMetrics> => {
   }
 };
 
-export const getStressSensitivity = async (): Promise<StressSensitivityItem[]> => {
+export const getStressSensitivity = async (start_date?: string, end_date?: string): Promise<StressSensitivityItem[]> => {
   if (isMockModeActive()) {
     return [
       { leverage_stress: "Base Leverage", equity_stress: "Base Equity", average_default_probability: 0.0152 },
@@ -504,7 +509,12 @@ export const getStressSensitivity = async (): Promise<StressSensitivityItem[]> =
     ];
   }
   try {
-    const res = await client.get<StressSensitivityItem[]>('/scenarios/sensitivity');
+    const res = await client.get<StressSensitivityItem[]>('/scenarios/sensitivity', { 
+      params: { 
+        start_date: start_date || null, 
+        end_date: end_date || null 
+      } 
+    });
     return res.data;
   } catch (err) {
     console.warn("Backend /scenarios/sensitivity unavailable, using mock data.", err);

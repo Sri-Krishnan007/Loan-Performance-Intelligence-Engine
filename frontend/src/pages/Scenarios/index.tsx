@@ -56,6 +56,16 @@ export const Scenarios: React.FC = () => {
       setError(null);
       const res = await runScenario(selectedScen, selectedSegs, startDate, endDate);
       
+      // Reload corresponding Monte Carlo and Stress Sensitivity metrics for the filtered timeframe!
+      try {
+        const mc = await getMonteCarlo(startDate, endDate);
+        setMcData(mc);
+        const sens = await getStressSensitivity(startDate, endDate);
+        setSensitivityData(sens);
+      } catch (mcErr) {
+        console.warn("Failed to update timeframe-specific simulator indicators", mcErr);
+      }
+      
       // Inject custom stress inputs into result
       const modifiedRes: ScenarioResponse = {
         ...res,
@@ -73,9 +83,10 @@ export const Scenarios: React.FC = () => {
       };
       
       setResult(modifiedRes);
-    } catch (err) {
+    } catch (err: any) {
       console.error(err);
-      setError("Scenario simulation execution failed.");
+      const errMsg = err?.response?.data?.detail || "Scenario simulation execution failed.";
+      setError(errMsg);
     } finally {
       setLoading(false);
     }
