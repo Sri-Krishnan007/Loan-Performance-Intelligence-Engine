@@ -9,12 +9,6 @@ An ML-first system for loan-data profiling, performance prediction, operational 
   - **Case Studies**: Resolving Pydantic V2 environment crashes, join collisions, and TypeScript strict unused locals.
   - **Mathematical Formulations**: Markov transitions, Monte Carlo Expected Loss, and joint double-trigger stress sensitivity math.
   - **Human Review Process**: Rejected AI outputs (e.g. SHAP, prefit calibration, decommissioned llama3 Groq model parameters).
-* **[ML Deep-Dive & Interview Preparation Guide](file:///c:/Sk%20PC/My%20Guidelines/Placement%20Prep/INTAIN/LAC/loan-verification-copilot/docs/ml_deep_dive_interview_guide.md)**: A comprehensive guide covering:
-  - **Phase-by-Phase Process & Workflow** detailing the engineering rationale.
-  - **Metric Selection Rationale** (Why we use ROC-AUC, PR-AUC, F1, Recall at Fixed Precision, Brier, and ECE).
-  - **Probability Calibration & Monotonicity** (Isotonic Regression vs. Platt Scaling).
-  - **Survival Modeling** for competing default and prepayment risks.
-  - **Interview Q&A Prep Sheet** with expected questions and architectural defense strategies.
 * **[Mortgage Underwriting & Credit Domain Intelligence Guide](file:///c:/Sk%20PC/My%20Guidelines/Placement%20Prep/INTAIN/LAC/loan-verification-copilot/docs/loan_domain_intelligence_guide.md)**: A domain training guide explaining:
   - **Underwriting Parameters & Limits** (FICO credit bands, LTV ratios, DTI bands).
   - **Credit State Transitions** (Current, Delinquent [30+ DPD], Default [90+ DPD], and Prepayment).
