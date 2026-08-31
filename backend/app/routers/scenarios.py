@@ -9,7 +9,9 @@ def run_scenario(payload: ScenarioRequest):
     """Runs a macroeconomic stress scenario simulation and aggregates results."""
     res = ScenarioService.run_scenario_simulation(
         scenario=payload.scenario,
-        segments=payload.segments
+        segments=payload.segments,
+        start_date=payload.start_date,
+        end_date=payload.end_date
     )
     return ScenarioResponse(
         scenario=res["scenario"],

@@ -33,6 +33,8 @@ export const Scenarios: React.FC = () => {
   // Advanced simulation states
   const [mcData, setMcData] = useState<MonteCarloMetrics | null>(null);
   const [sensitivityData, setSensitivityData] = useState<StressSensitivityItem[]>([]);
+  const [startDate, setStartDate] = useState('');
+  const [endDate, setEndDate] = useState('');
 
   useEffect(() => {
     const loadSimulationMetrics = async () => {
@@ -52,7 +54,7 @@ export const Scenarios: React.FC = () => {
     try {
       setLoading(true);
       setError(null);
-      const res = await runScenario(selectedScen, selectedSegs);
+      const res = await runScenario(selectedScen, selectedSegs, startDate, endDate);
       
       // Inject custom stress inputs into result
       const modifiedRes: ScenarioResponse = {
@@ -107,9 +109,9 @@ export const Scenarios: React.FC = () => {
   };
 
   const chartData = result ? [
-    { name: 'Delinquency', Baseline: (baselineRates.delinquency * 100).toFixed(2), Stressed: (result.portfolio.delinquency_rate * 100).toFixed(2) },
-    { name: 'Default', Baseline: (baselineRates.default * 100).toFixed(2), Stressed: (result.portfolio.default_rate * 100).toFixed(2) },
-    { name: 'Prepayment', Baseline: (baselineRates.prepayment * 100).toFixed(2), Stressed: (result.portfolio.prepayment_rate * 100).toFixed(2) },
+    { name: 'Delinquency', Baseline: parseFloat((baselineRates.delinquency * 100).toFixed(2)), Stressed: parseFloat((result.portfolio.delinquency_rate * 100).toFixed(2)) },
+    { name: 'Default', Baseline: parseFloat((baselineRates.default * 100).toFixed(2)), Stressed: parseFloat((result.portfolio.default_rate * 100).toFixed(2)) },
+    { name: 'Prepayment', Baseline: parseFloat((baselineRates.prepayment * 100).toFixed(2)), Stressed: parseFloat((result.portfolio.prepayment_rate * 100).toFixed(2)) },
   ] : [];
 
   // 2. Expected Loss and LGD projections calculation
@@ -277,6 +279,37 @@ export const Scenarios: React.FC = () => {
             </div>
           </div>
 
+          {/* Time Period Filter */}
+          <div className="space-y-3 border-t border-slate-800/60 pt-4">
+            <h3 className="text-xs font-bold text-slate-350 tracking-wider uppercase flex items-center space-x-1.5">
+              <Activity className="h-3.5 w-3.5 text-brand-400" />
+              <span>Time Period Filter</span>
+            </h3>
+            <div className="grid grid-cols-2 gap-2 text-xs">
+              <div className="space-y-1">
+                <span className="text-slate-500 font-semibold block text-[10px] uppercase">Start Date</span>
+                <input
+                  type="text"
+                  placeholder="YYYY-MM-DD"
+                  value={startDate}
+                  onChange={(e) => setStartDate(e.target.value)}
+                  className="w-full bg-slate-900 border border-slate-800 focus:border-brand-500 rounded px-2.5 py-1.5 text-xs text-white placeholder-slate-700 focus:outline-none"
+                />
+              </div>
+              <div className="space-y-1">
+                <span className="text-slate-500 font-semibold block text-[10px] uppercase">End Date</span>
+                <input
+                  type="text"
+                  placeholder="YYYY-MM-DD"
+                  value={endDate}
+                  onChange={(e) => setEndDate(e.target.value)}
+                  className="w-full bg-slate-900 border border-slate-800 focus:border-brand-500 rounded px-2.5 py-1.5 text-xs text-white placeholder-slate-700 focus:outline-none"
+                />
+              </div>
+            </div>
+            <p className="text-[9px] text-slate-500 italic">Filter portfolio history (e.g., 2018-08-01 to 2021-10-01). Leave blank for latest records.</p>
+          </div>
+
           {/* 1. Custom Stress Sliders */}
           <div className="space-y-3 border-t border-slate-800/60 pt-4">
             <h3 className="text-xs font-bold text-slate-300 tracking-wider uppercase flex items-center space-x-1.5">
@@ -428,9 +461,8 @@ export const Scenarios: React.FC = () => {
                       <YAxis stroke="#64748b" />
                       <Tooltip contentStyle={{ backgroundColor: '#0f172a', borderColor: '#1e293b' }} />
                       <Legend />
-                      <Bar dataKey="Delinquency" fill="#f59e0b" />
-                      <Bar dataKey="Default" fill="#ef4444" />
-                      <Bar dataKey="Prepayment" fill="#10b981" />
+                      <Bar dataKey="Baseline" fill="#475569" name="Baseline Rate (%)" />
+                      <Bar dataKey="Stressed" fill="#ef4444" name="Stressed Rate (%)" />
                     </BarChart>
                   </ResponsiveContainer>
                 </div>

@@ -5,7 +5,7 @@ import pandas as pd
 
 class ScenarioService:
     @staticmethod
-    def run_scenario_simulation(scenario: str, segments: list[str]) -> dict:
+    def run_scenario_simulation(scenario: str, segments: list[str], start_date: str = None, end_date: str = None) -> dict:
         """Runs the macroeconomic stress scenario simulation on the active portfolio."""
         if not loan_state.initialized:
             loan_state.initialize()
@@ -19,18 +19,31 @@ class ScenarioService:
                 detail=f"Invalid scenario: '{scenario}'. Valid options: {valid_scenarios}"
             )
             
+        # Determine source records: filter by date range if provided, otherwise latest_records
+        if start_date or end_date:
+            df = loan_state.merged_df
+            if start_date:
+                df = df[df["reporting_month"] >= start_date]
+            if end_date:
+                df = df[df["reporting_month"] <= end_date]
+            
+            # Group by loan_id and take the latest record per loan in that period
+            grouped_df = df.sort_values("reporting_month").groupby("loan_id").last().reset_index()
+        else:
+            grouped_df = loan_state.latest_records
+
         # Prepare predictions DataFrame for active loans
         active_df = pd.DataFrame({
-            "loan_id": loan_state.latest_records["loan_id"],
-            "reporting_month": loan_state.latest_records["reporting_month"],
-            "credit_score_band": loan_state.latest_records["credit_score_band"],
-            "ltv_band": loan_state.latest_records["ltv_band"],
-            "vintage": loan_state.latest_records["vintage"],
-            "state": loan_state.latest_records["state"],
-            "servicer_name": loan_state.latest_records["servicer_name"],
-            "prob_delinquency_3m": loan_state.latest_records["delinquency_probability"],
-            "prob_default_12m": loan_state.latest_records["default_probability"],
-            "prob_prepayment_12m": loan_state.latest_records["prepayment_probability"]
+            "loan_id": grouped_df["loan_id"],
+            "reporting_month": grouped_df["reporting_month"],
+            "credit_score_band": grouped_df["credit_score_band"],
+            "ltv_band": grouped_df["ltv_band"],
+            "vintage": grouped_df["vintage"],
+            "state": grouped_df["state"],
+            "servicer_name": grouped_df["servicer_name"],
+            "prob_delinquency_3m": grouped_df["delinquency_probability"],
+            "prob_default_12m": grouped_df["default_probability"],
+            "prob_prepayment_12m": grouped_df["prepayment_probability"]
         })
         
         # Simulate stressed probabilities

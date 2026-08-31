@@ -255,7 +255,7 @@ export const getModelHealth = async (): Promise<T.ModelHealthResponse> => {
   }
 };
 
-export const runScenario = async (scenario: string, segments: string[]): Promise<T.ScenarioResponse> => {
+export const runScenario = async (scenario: string, segments: string[], start_date?: string, end_date?: string): Promise<T.ScenarioResponse> => {
   if (isMockModeActive()) {
     return {
       scenario: scenario.toUpperCase(),
@@ -269,7 +269,12 @@ export const runScenario = async (scenario: string, segments: string[]): Promise
     };
   }
   try {
-    const res = await client.post<T.ScenarioResponse>('/scenarios/run', { scenario, segments });
+    const res = await client.post<T.ScenarioResponse>('/scenarios/run', { 
+      scenario, 
+      segments, 
+      start_date: start_date || null, 
+      end_date: end_date || null 
+    });
     return res.data;
   } catch (err) {
     console.warn("Backend /scenarios/run unavailable, falling back to mock data.", err);
