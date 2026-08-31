@@ -27,7 +27,7 @@ class ModelService:
                 perf = json.load(f)
                 
                 # delinquency_3m
-                del3 = perf.get("delinquency_3m", {}).get("calibrated", {})
+                del3 = perf.get("delinquency_3m", {}).get("improved_calibrated", {})
                 models.append({
                     "name": "delinquency_3m",
                     "version": "v1.0",
@@ -39,7 +39,7 @@ class ModelService:
                 })
                 
                 # delinquency_6m
-                del6 = perf.get("delinquency_6m", {}).get("calibrated", {})
+                del6 = perf.get("delinquency_6m", {}).get("improved_calibrated", {})
                 models.append({
                     "name": "delinquency_6m",
                     "version": "v1.0",
@@ -51,7 +51,7 @@ class ModelService:
                 })
                 
                 # default_12m
-                df12 = perf.get("default_12m", {}).get("calibrated", {})
+                df12 = perf.get("default_12m", {}).get("improved_calibrated", {})
                 models.append({
                     "name": "default_12m",
                     "version": "v1.0",
@@ -63,7 +63,7 @@ class ModelService:
                 })
                 
                 # prepayment_12m
-                pr12 = perf.get("prepayment_12m", {}).get("calibrated", {})
+                pr12 = perf.get("prepayment_12m", {}).get("improved_calibrated", {})
                 models.append({
                     "name": "prepayment_12m",
                     "version": "v1.0",
@@ -75,7 +75,7 @@ class ModelService:
                 })
                 
                 # next_state
-                ns = perf.get("next_state", {})
+                ns = perf.get("next_state", {}).get("improved", {})
                 models.append({
                     "name": "next_state",
                     "version": "v1.0",

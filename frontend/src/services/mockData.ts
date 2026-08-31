@@ -303,10 +303,11 @@ export const mockDataQuality: T.DataQualityResponse = {
 
 export const mockModelHealth: T.ModelHealthResponse = {
   models: [
-    { name: "delinquency_3m", version: "v1.0", roc_auc: 0.8836, pr_auc: 0.7887, f1: 0.8279, brier_score: 0.0240, calibrated: true, artifact_available: true },
-    { name: "delinquency_6m", version: "v1.0", roc_auc: 0.8122, pr_auc: 0.7143, f1: 0.7073, brier_score: 0.0640, calibrated: true, artifact_available: true },
-    { name: "default_12m", version: "v1.0", roc_auc: 0.8090, pr_auc: 0.5990, f1: 0.6869, brier_score: 0.0113, calibrated: true, artifact_available: true },
-    { name: "prepayment_12m", version: "v1.0", roc_auc: 0.7790, pr_auc: 0.5522, f1: 0.6699, brier_score: 0.0083, calibrated: true, artifact_available: true }
+    { name: "delinquency_3m", version: "v1.0", roc_auc: 0.8857, pr_auc: 0.7914, f1: 0.8279, brier_score: 0.0240, calibrated: true, artifact_available: true },
+    { name: "delinquency_6m", version: "v1.0", roc_auc: 0.8137, pr_auc: 0.7212, f1: 0.7070, brier_score: 0.0639, calibrated: true, artifact_available: true },
+    { name: "default_12m", version: "v1.0", roc_auc: 0.8342, pr_auc: 0.5885, f1: 0.6893, brier_score: 0.0112, calibrated: true, artifact_available: true },
+    { name: "prepayment_12m", version: "v1.0", roc_auc: 0.7833, pr_auc: 0.5555, f1: 0.6715, brier_score: 0.0083, calibrated: true, artifact_available: true },
+    { name: "next_state", version: "v1.0", roc_auc: 0.0, pr_auc: 0.0, f1: 0.1674, brier_score: 0.0, calibrated: false, artifact_available: true }
   ],
   validation: {
     method: "time-aware-split",
